@@ -2,7 +2,6 @@ import { useState } from "react";
 import ProductForm from "../components/ProductForm";
 import ProductTable from "../components/ProductTable";
 
-// Vista de Inventario — CRUD completo
 const InventoryPage = ({
   products,
   onAddProduct,
@@ -22,7 +21,7 @@ const InventoryPage = ({
 
   const handleEdit = (product) => {
     setEditingProduct(product);
-    // Scroll al formulario en móvil
+    
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -30,7 +29,7 @@ const InventoryPage = ({
 
   return (
     <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
-      {/* Encabezado */}
+      
       <div>
         <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
           Gestión de Inventario
@@ -40,9 +39,8 @@ const InventoryPage = ({
         </p>
       </div>
 
-      {/* Layout: 1 columna en móvil, formulario+tabla en dos columnas en xl */}
       <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-4 sm:gap-5 items-start">
-        {/* Columna formulario — sticky solo en desktop */}
+        
         <div className="xl:sticky xl:top-6">
           <ProductForm
             onSubmit={handleSubmit}
@@ -50,7 +48,6 @@ const InventoryPage = ({
             onCancelEdit={handleCancelEdit}
           />
 
-          {/* Mini stats del inventario actual */}
           <div className="mt-4 bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-4 space-y-3 shadow-sm dark:shadow-none">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               Resumen Rápido
@@ -87,7 +84,6 @@ const InventoryPage = ({
           </div>
         </div>
 
-        {/* Tabla de productos */}
         <ProductTable
           products={products}
           onEdit={handleEdit}

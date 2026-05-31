@@ -1,4 +1,4 @@
-// Navbar superior — hamburguesa visible solo en móvil (lg:hidden)
+
 const Navbar = ({ currentView, toggleSidebar }) => {
   const viewTitles = {
     dashboard: "Dashboard",
@@ -15,9 +15,9 @@ const Navbar = ({ currentView, toggleSidebar }) => {
       transition-colors duration-300
     "
     >
-      {/* Lado izquierdo: botón hamburguesa (solo móvil) + Logo + Título */}
+      
       <div className="flex items-center gap-3">
-        {/* Botón hamburguesa — visible únicamente en móvil/tablet */}
+        
         <button
           id="sidebar-toggle-btn"
           onClick={toggleSidebar}
@@ -40,7 +40,6 @@ const Navbar = ({ currentView, toggleSidebar }) => {
           </svg>
         </button>
 
-        {/* Logo */}
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 flex-shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +55,6 @@ const Navbar = ({ currentView, toggleSidebar }) => {
           </svg>
         </div>
 
-        {/* Título de la vista */}
         <div className="min-w-0">
           <p className="text-xs text-gray-400 dark:text-gray-500 leading-none font-medium tracking-wider uppercase hidden sm:block">
             Control Stock
@@ -67,7 +65,6 @@ const Navbar = ({ currentView, toggleSidebar }) => {
         </div>
       </div>
 
-      {/* Lado derecho: Avatar + Info usuario */}
       <div className="flex items-center gap-3 flex-shrink-0">
         <div className="hidden sm:block text-right">
           <p className="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors">

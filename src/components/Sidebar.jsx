@@ -1,6 +1,5 @@
-// Sidebar lateral — overlay en móvil, fijo en desktop (lg+)
 
-// ─── Items de navegación ─────────────────────────────────────────────────────
+
 const navItems = [
   {
     id: "dashboard",
@@ -45,7 +44,6 @@ const navItems = [
   },
 ];
 
-// ─── Íconos de Preferencias ───────────────────────────────────────────────────
 const IconMoon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +115,23 @@ const IconHelp = () => (
   </svg>
 );
 
-// ─── Componente Sidebar ───────────────────────────────────────────────────────
+const IconLogout = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+    <polyline points="16 17 21 12 16 7" />
+    <line x1="21" y1="12" x2="9" y2="12" />
+  </svg>
+);
+
 const Sidebar = ({
   currentView,
   setCurrentView,
@@ -139,7 +153,7 @@ const Sidebar = ({
         lg:static lg:translate-x-0 lg:z-auto lg:w-60 lg:flex-shrink-0
       `}
     >
-      {/* ── Cabecera: Logo + botón cerrar (solo móvil) ── */}
+      
       <div className="flex items-center justify-between px-5 mb-4 lg:mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
@@ -157,12 +171,11 @@ const Sidebar = ({
           <span className="text-sm font-bold gradient-text">Control Stock</span>
         </div>
 
-        {/* Botón X — solo visible en móvil */}
         <button
           id="sidebar-close-btn"
           onClick={onClose}
           aria-label="Cerrar menú"
-          className="lg:hidden w-8 h-8 rounded-lg text-gray-400 hover:text-white hover:bg-white/8 flex items-center justify-center transition-all"
+          className="lg:hidden w-8 h-8 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10 flex items-center justify-center transition-all"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -180,12 +193,10 @@ const Sidebar = ({
         </button>
       </div>
 
-      {/* ── Título sección navegación ── */}
       <p className="text-xs text-gray-600 uppercase font-semibold tracking-widest px-5 mb-2">
         Navegación
       </p>
 
-      {/* ── Items de navegación ── */}
       {navItems.map((item) => {
         const isActive = currentView === item.id;
         return (
@@ -197,11 +208,11 @@ const Sidebar = ({
               ${
                 isActive
                   ? "bg-gradient-to-r from-indigo-600/70 to-purple-600/50 text-white shadow-lg shadow-indigo-500/20 border border-indigo-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5"
               }`}
           >
             <span
-              className={`${isActive ? "text-indigo-300" : "text-gray-500 group-hover:text-gray-300"} transition-colors`}
+              className={`${isActive ? "text-indigo-300" : "text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400"} transition-colors`}
             >
               {item.icon}
             </span>
@@ -213,14 +224,13 @@ const Sidebar = ({
         );
       })}
 
-      {/* ── Sección inferior anclada ── */}
       <div className="mt-auto pt-5">
         <p className="text-xs text-gray-600 uppercase font-semibold tracking-widest px-5 mb-2">
           Preferencias
         </p>
 
         <div className="flex flex-col gap-0.5 mx-3">
-          {/* Botón: Modo oscuro / claro */}
+          
           <button
             id="toggle-darkmode-btn"
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -235,26 +245,36 @@ const Sidebar = ({
             {isDarkMode ? "Modo claro" : "Modo oscuro"}
           </button>
 
-          {/* Botón: Configurar */}
           <button
             id="settings-btn"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5 transition-all duration-200 group"
           >
-            <span className="text-gray-500 group-hover:text-indigo-400 transition-colors">
+            <span className="text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400 transition-colors">
               <IconSettings />
             </span>
             Configurar
           </button>
 
-          {/* Botón: Ayuda */}
           <button
             id="help-btn"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5 transition-all duration-200 group"
           >
-            <span className="text-gray-500 group-hover:text-indigo-400 transition-colors">
+            <span className="text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400 transition-colors">
               <IconHelp />
             </span>
             Ayuda
+          </button>
+
+          <div className="h-px bg-gray-200 dark:bg-gray-700/50 my-1 mx-2" />
+
+          <button
+            id="logout-btn"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:text-rose-500 dark:hover:text-rose-400 dark:hover:bg-rose-500/10 transition-all duration-200 group"
+          >
+            <span className="text-rose-500 group-hover:text-rose-600 dark:text-rose-500/80 dark:group-hover:text-rose-400 transition-colors">
+              <IconLogout />
+            </span>
+            Cerrar sesión
           </button>
         </div>
       </div>

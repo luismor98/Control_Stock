@@ -2,7 +2,6 @@ import { useState } from "react";
 
 const STOCK_THRESHOLD = 5;
 
-// Badge de categoría
 const CategoryBadge = ({ category }) => {
   const colors = {
     Electrónica:
@@ -27,7 +26,6 @@ const CategoryBadge = ({ category }) => {
   );
 };
 
-// ── Tarjeta de producto para vista móvil ──────────────────────────────────────
 const ProductCard = ({ product, onEdit, onDelete }) => {
   const isLowStock =
     product.quantity <= STOCK_THRESHOLD && product.quantity > 0;
@@ -35,7 +33,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
 
   return (
     <div className="bg-white dark:bg-transparent dark:glass rounded-xl border border-gray-200 dark:border-white/5 p-4 space-y-3 shadow-sm dark:shadow-none">
-      {/* Fila 1: Nombre + Categoría */}
+      
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 leading-tight">
@@ -50,7 +48,6 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
         <CategoryBadge category={product.category} />
       </div>
 
-      {/* Fila 2: Stats */}
       <div className="grid grid-cols-3 gap-2 text-center">
         <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg py-2 px-1">
           <p className="text-xs text-gray-400 dark:text-gray-500 mb-0.5">
@@ -80,7 +77,6 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Fila 3: Badges de stock + Acciones */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex gap-1.5">
           {isOutOfStock && (
@@ -143,7 +139,6 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
   );
 };
 
-// ── Tabla/lista interactiva de productos ─────────────────────────────────────
 const ProductTable = ({ products, onEdit, onDelete }) => {
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState("name");
@@ -197,7 +192,7 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
 
   return (
     <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 overflow-hidden shadow-sm dark:shadow-none">
-      {/* Header con buscador */}
+      
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 sm:p-5 border-b border-gray-100 dark:border-white/5">
         <div>
           <h2 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-white">
@@ -232,7 +227,6 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Estado vacío */}
       {filtered.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
           <div className="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-gray-800/60 flex items-center justify-center text-gray-400 dark:text-gray-600">
@@ -266,7 +260,7 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
 
       {filtered.length > 0 && (
         <>
-          {/* ── Vista MÓVIL: tarjetas apiladas (oculta en md+) ── */}
+          
           <div className="md:hidden p-4 space-y-3">
             {filtered.map((product) => (
               <ProductCard
@@ -278,7 +272,6 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
             ))}
           </div>
 
-          {/* ── Vista DESKTOP: tabla tradicional (oculta en móvil) ── */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 dark:bg-gray-900/40 border-b border-gray-100 dark:border-white/5">
@@ -418,7 +411,6 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
         </>
       )}
 
-      {/* Modal de confirmación de eliminación */}
       {confirmDelete !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-black/60 backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-900 dark:glass rounded-2xl border border-gray-200 dark:border-white/10 p-6 w-full max-w-sm shadow-2xl shadow-rose-500/10">

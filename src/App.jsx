@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MainLayout from "./layouts/MainLayout";
+import Toast from "./components/Toast";
 
-// ─── Datos Mock Iniciales ───────────────────────────────────────────────────
 const INITIAL_PRODUCTS = [
   {
     id: 1,
@@ -119,7 +119,6 @@ const INITIAL_PRODUCTS = [
 
 const STOCK_THRESHOLD = 5;
 
-// ─── Función para calcular estadísticas derivadas ────────────────────────────
 const computeStats = (products) => ({
   totalProducts: products.length,
   totalUnits: products.reduce((sum, p) => sum + p.quantity, 0),
@@ -130,21 +129,27 @@ const computeStats = (products) => ({
   outOfStockCount: products.filter((p) => p.quantity === 0).length,
 });
 
-// ─── App — Componente raíz con estado elevado ────────────────────────────────
 const App = () => {
   const [currentView, setCurrentView] = useState("dashboard");
-  const [isDarkMode, setIsDarkMode] = useState(true); // dark mode activado por defecto
+  const [isDarkMode, setIsDarkMode] = useState(true); 
   const [products, setProducts] = useState([]);
   const [stats, setStats] = useState(computeStats([]));
   const [isLoading, setIsLoading] = useState(true);
   const [nextId, setNextId] = useState(INITIAL_PRODUCTS.length + 1);
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
-  // useEffect #1: Aplica/quita la clase "dark" en <html> según el estado
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+    // Ocultar automáticamente después de 3.5s
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 3500);
+  };
+
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
   }, [isDarkMode]);
 
-  // useEffect #2: Simula carga inicial de datos (como si fuera un fetch)
   useEffect(() => {
     const timer = setTimeout(() => {
       setProducts(INITIAL_PRODUCTS);
@@ -153,29 +158,29 @@ const App = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // useEffect #3: Recalcula estadísticas cada vez que cambia el inventario
   useEffect(() => {
     setStats(computeStats(products));
   }, [products]);
 
-  // ── Operaciones CRUD ─────────────────────────────────────────────────────
   const handleAddProduct = (formData) => {
     const newProduct = { id: nextId, ...formData };
     setProducts((prev) => [...prev, newProduct]);
     setNextId((id) => id + 1);
+    showToast("Producto agregado al inventario", "success");
   };
 
   const handleUpdateProduct = (updatedProduct) => {
     setProducts((prev) =>
       prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)),
     );
+    showToast("Producto actualizado correctamente", "info");
   };
 
   const handleDeleteProduct = (id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
+    showToast("Producto eliminado del sistema", "error");
   };
 
-  // ── Pantalla de carga ────────────────────────────────────────────────────
   if (isLoading) {
     return (
       <div className="h-screen bg-gray-100 dark:bg-gray-950 flex flex-col items-center justify-center gap-4 transition-colors duration-300">
@@ -213,17 +218,27 @@ const App = () => {
   }
 
   return (
-    <MainLayout
-      currentView={currentView}
-      setCurrentView={setCurrentView}
-      isDarkMode={isDarkMode}
-      setIsDarkMode={setIsDarkMode}
-      products={products}
-      stats={stats}
-      onAddProduct={handleAddProduct}
-      onUpdateProduct={handleUpdateProduct}
-      onDeleteProduct={handleDeleteProduct}
-    />
+    <>
+      <MainLayout
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
+        products={products}
+        stats={stats}
+        onAddProduct={handleAddProduct}
+        onUpdateProduct={handleUpdateProduct}
+        onDeleteProduct={handleDeleteProduct}
+      />
+      
+      {/* Sistema global de notificaciones */}
+      <Toast 
+        show={toast.show} 
+        message={toast.message} 
+        type={toast.type} 
+        onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+      />
+    </>
   );
 };
 

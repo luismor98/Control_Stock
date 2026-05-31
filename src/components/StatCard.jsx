@@ -1,4 +1,4 @@
-// StatCard — tarjeta de estadística con ícono, valor, etiqueta y color de acento
+
 const StatCard = ({ label, value, icon, accent, subLabel }) => {
   const accents = {
     indigo: {
@@ -44,7 +44,7 @@ const StatCard = ({ label, value, icon, accent, subLabel }) => {
     <div
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${style.bg} border ${style.border} shadow-xl ${style.glow} p-5 flex flex-col gap-3 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-default`}
     >
-      {/* Bola decorativa de fondo */}
+      
       <div
         className={`absolute -top-4 -right-4 w-20 h-20 rounded-full ${style.icon} blur-2xl opacity-40`}
       />

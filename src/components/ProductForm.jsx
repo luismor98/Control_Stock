@@ -10,7 +10,6 @@ const CATEGORIES = [
   "Otro",
 ];
 
-// Formulario para Crear y Editar productos
 const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
   const emptyForm = {
     name: "",
@@ -22,7 +21,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
 
-  // Cuando llega un producto a editar, rellenamos el formulario
   useEffect(() => {
     if (editingProduct) {
       setForm({
@@ -97,7 +95,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
     <div
       className={`bg-white dark:bg-transparent dark:glass rounded-2xl p-6 border transition-all duration-300 shadow-sm dark:shadow-none ${isEditing ? "border-amber-300 dark:border-amber-500/30 shadow-amber-100 dark:shadow-lg dark:shadow-amber-500/10" : "border-gray-200 dark:border-white/5"}`}
     >
-      {/* Cabecera del formulario */}
+      
       <div className="flex items-center gap-3 mb-5">
         <div
           className={`w-9 h-9 rounded-xl flex items-center justify-center ${isEditing ? "bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400" : "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400"}`}
@@ -146,7 +144,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Nombre */}
+        
         <div>
           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
             Nombre del producto *
@@ -167,7 +165,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
           )}
         </div>
 
-        {/* Categoría */}
         <div>
           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
             Categoría
@@ -191,7 +188,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
           </select>
         </div>
 
-        {/* Cantidad + Precio en fila */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
@@ -236,7 +232,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
           </div>
         </div>
 
-        {/* Descripción */}
         <div>
           <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
             Descripción (opcional)
@@ -252,7 +247,6 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
           />
         </div>
 
-        {/* Botones */}
         <div className="flex gap-3 pt-1">
           <button
             id="form-submit-btn"

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import StatCard from "../components/StatCard";
 
-// Íconos reutilizables dentro de las StatCards
 const icons = {
   box: (
     <svg
@@ -83,7 +82,6 @@ const icons = {
 
 const STOCK_THRESHOLD = 5;
 
-// Barra de progreso de categorías
 const CategoryBar = ({ label, count, total, color }) => {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
@@ -104,7 +102,6 @@ const CategoryBar = ({ label, count, total, color }) => {
   );
 };
 
-// Fila de producto reciente
 const RecentProductRow = ({ product, rank }) => {
   const isLow = product.quantity <= STOCK_THRESHOLD && product.quantity > 0;
   const isOut = product.quantity === 0;
@@ -139,7 +136,6 @@ const RecentProductRow = ({ product, rank }) => {
   );
 };
 
-// ── Gráfico Donut SVG: valor del inventario por categoría ──────────────────
 const DONUT_COLORS = [
   { stroke: "#6366f1", bg: "bg-indigo-500",  text: "text-indigo-600 dark:text-indigo-400" },
   { stroke: "#a855f7", bg: "bg-purple-500",  text: "text-purple-600 dark:text-purple-400" },
@@ -153,7 +149,6 @@ const DONUT_COLORS = [
 const CategoryDonut = ({ products }) => {
   const [hovered, setHovered] = useState(null);
 
-  // Agrupar valor total por categoría
   const byCategory = products.reduce((acc, p) => {
     acc[p.category] = (acc[p.category] || 0) + p.price * p.quantity;
     return acc;
@@ -165,14 +160,12 @@ const CategoryDonut = ({ products }) => {
 
   const total = entries.reduce((s, e) => s + e.value, 0);
 
-  // Parámetros SVG del donut
-  const R = 60;      // radio externo
-  const r = 38;      // radio interno (grosor de la dona)
+  const R = 60;      
+  const r = 38;      
   const cx = 80;
   const cy = 80;
   const circumference = 2 * Math.PI * R;
 
-  // Calcular los arcos con offset
   let offset = 0;
   const arcs = entries.map((entry) => {
     const pct = total > 0 ? entry.value / total : 0;
@@ -195,10 +188,10 @@ const CategoryDonut = ({ products }) => {
 
   return (
     <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
-      {/* Dona SVG */}
+      
       <div className="relative flex-shrink-0">
         <svg width="160" height="160" viewBox="0 0 160 160">
-          {/* Círculo de fondo (track) */}
+          
           <circle
             cx={cx} cy={cy} r={R}
             fill="none"
@@ -207,7 +200,6 @@ const CategoryDonut = ({ products }) => {
             className="text-gray-100 dark:text-gray-700"
           />
 
-          {/* Arcos de datos */}
           {arcs.map((arc, i) => (
             <circle
               key={arc.name}
@@ -226,7 +218,6 @@ const CategoryDonut = ({ products }) => {
           ))}
         </svg>
 
-        {/* Texto central */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           {hoveredEntry ? (
             <>
@@ -251,7 +242,6 @@ const CategoryDonut = ({ products }) => {
         </div>
       </div>
 
-      {/* Leyenda */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 w-full">
         {arcs.map((arc, i) => (
           <div
@@ -283,9 +273,8 @@ const CategoryDonut = ({ products }) => {
   );
 };
 
-// Vista Dashboard principal
 const DashboardPage = ({ products, stats, setCurrentView }) => {
-  // Agrupar por categoría
+  
   const byCategory = products.reduce((acc, p) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
@@ -305,12 +294,10 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
     (a, b) => b[1] - a[1],
   );
 
-  // Top 5 por valor total
   const topByValue = [...products]
     .sort((a, b) => b.price * b.quantity - a.price * a.quantity)
     .slice(0, 5);
 
-  // Productos con stock bajo
   const lowStockProducts = products
     .filter((p) => p.quantity <= STOCK_THRESHOLD)
     .sort((a, b) => a.quantity - b.quantity)
@@ -318,7 +305,7 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
 
   return (
     <div className="p-4 sm:p-6 space-y-5 sm:space-y-6">
-      {/* Encabezado */}
+      
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
@@ -351,7 +338,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
         </button>
       </div>
 
-      {/* StatCards — 1 col en móvil, 2 en sm, 4 en lg */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard
           label="Total de Productos"
@@ -383,9 +369,8 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
         />
       </div>
 
-      {/* Grid de paneles — 1 col en móvil, 3 en lg */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-        {/* Distribución por categorías */}
+        
         <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-5 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">
@@ -414,7 +399,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
           )}
         </div>
 
-        {/* Top 5 por valor */}
         <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-5 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -437,7 +421,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
           )}
         </div>
 
-        {/* Alertas de stock bajo */}
         <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-5 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-7 h-7 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
@@ -473,7 +456,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
           )}
         </div>
 
-        {/* ── Gráfico Donut: valor por categoría ── */}
         <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-5 shadow-sm dark:shadow-none lg:col-span-3">
           <div className="flex items-center gap-2 mb-5">
             <div className="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
