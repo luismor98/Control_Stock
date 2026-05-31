@@ -1,0 +1,265 @@
+// Sidebar lateral — overlay en móvil, fijo en desktop (lg+)
+
+// ─── Items de navegación ─────────────────────────────────────────────────────
+const navItems = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    id: "inventory",
+    label: "Inventario",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.29 7 12 12 20.71 7" />
+        <line x1="12" y1="22" x2="12" y2="12" />
+      </svg>
+    ),
+  },
+];
+
+// ─── Íconos de Preferencias ───────────────────────────────────────────────────
+const IconMoon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+);
+
+const IconSun = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="5" />
+    <line x1="12" y1="1" x2="12" y2="3" />
+    <line x1="12" y1="21" x2="12" y2="23" />
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+    <line x1="1" y1="12" x2="3" y2="12" />
+    <line x1="21" y1="12" x2="23" y2="12" />
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+  </svg>
+);
+
+const IconSettings = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+
+const IconHelp = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </svg>
+);
+
+// ─── Componente Sidebar ───────────────────────────────────────────────────────
+const Sidebar = ({
+  currentView,
+  setCurrentView,
+  isOpen,
+  onClose,
+  isDarkMode,
+  setIsDarkMode,
+}) => {
+  return (
+    <aside
+      className={`
+        fixed top-0 left-0 h-full z-40
+        w-72
+        glass sidebar-glow
+        flex flex-col
+        py-6 gap-2
+        transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:static lg:translate-x-0 lg:z-auto lg:w-60 lg:flex-shrink-0
+      `}
+    >
+      {/* ── Cabecera: Logo + botón cerrar (solo móvil) ── */}
+      <div className="flex items-center justify-between px-5 mb-4 lg:mb-3">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-3.5 h-3.5 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            </svg>
+          </div>
+          <span className="text-sm font-bold gradient-text">Control Stock</span>
+        </div>
+
+        {/* Botón X — solo visible en móvil */}
+        <button
+          id="sidebar-close-btn"
+          onClick={onClose}
+          aria-label="Cerrar menú"
+          className="lg:hidden w-8 h-8 rounded-lg text-gray-400 hover:text-white hover:bg-white/8 flex items-center justify-center transition-all"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-4 h-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      {/* ── Título sección navegación ── */}
+      <p className="text-xs text-gray-600 uppercase font-semibold tracking-widest px-5 mb-2">
+        Navegación
+      </p>
+
+      {/* ── Items de navegación ── */}
+      {navItems.map((item) => {
+        const isActive = currentView === item.id;
+        return (
+          <button
+            key={item.id}
+            id={`nav-${item.id}-btn`}
+            onClick={() => setCurrentView(item.id)}
+            className={`mx-3 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
+              ${
+                isActive
+                  ? "bg-gradient-to-r from-indigo-600/70 to-purple-600/50 text-white shadow-lg shadow-indigo-500/20 border border-indigo-500/30"
+                  : "text-gray-400 hover:text-white hover:bg-white/5"
+              }`}
+          >
+            <span
+              className={`${isActive ? "text-indigo-300" : "text-gray-500 group-hover:text-gray-300"} transition-colors`}
+            >
+              {item.icon}
+            </span>
+            {item.label}
+            {isActive && (
+              <span className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/60" />
+            )}
+          </button>
+        );
+      })}
+
+      {/* ── Sección inferior anclada ── */}
+      <div className="mt-auto pt-5">
+        <p className="text-xs text-gray-600 uppercase font-semibold tracking-widest px-5 mb-2">
+          Preferencias
+        </p>
+
+        <div className="flex flex-col gap-0.5 mx-3">
+          {/* Botón: Modo oscuro / claro */}
+          <button
+            id="toggle-darkmode-btn"
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+              text-gray-600 hover:text-gray-900 hover:bg-gray-200
+              dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5
+              transition-all duration-200 group"
+          >
+            <span className="text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400 transition-colors">
+              {isDarkMode ? <IconSun /> : <IconMoon />}
+            </span>
+            {isDarkMode ? "Modo claro" : "Modo oscuro"}
+          </button>
+
+          {/* Botón: Configurar */}
+          <button
+            id="settings-btn"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group"
+          >
+            <span className="text-gray-500 group-hover:text-indigo-400 transition-colors">
+              <IconSettings />
+            </span>
+            Configurar
+          </button>
+
+          {/* Botón: Ayuda */}
+          <button
+            id="help-btn"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200 group"
+          >
+            <span className="text-gray-500 group-hover:text-indigo-400 transition-colors">
+              <IconHelp />
+            </span>
+            Ayuda
+          </button>
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;
