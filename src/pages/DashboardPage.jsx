@@ -137,13 +137,41 @@ const RecentProductRow = ({ product, rank }) => {
 };
 
 const DONUT_COLORS = [
-  { stroke: "#6366f1", bg: "bg-indigo-500",  text: "text-indigo-600 dark:text-indigo-400" },
-  { stroke: "#a855f7", bg: "bg-purple-500",  text: "text-purple-600 dark:text-purple-400" },
-  { stroke: "#10b981", bg: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400" },
-  { stroke: "#f59e0b", bg: "bg-amber-500",   text: "text-amber-600 dark:text-amber-400" },
-  { stroke: "#f43f5e", bg: "bg-rose-500",    text: "text-rose-600 dark:text-rose-400" },
-  { stroke: "#3b82f6", bg: "bg-blue-500",    text: "text-blue-600 dark:text-blue-400" },
-  { stroke: "#14b8a6", bg: "bg-teal-500",    text: "text-teal-600 dark:text-teal-400" },
+  {
+    stroke: "#6366f1",
+    bg: "bg-indigo-500",
+    text: "text-indigo-600 dark:text-indigo-400",
+  },
+  {
+    stroke: "#a855f7",
+    bg: "bg-purple-500",
+    text: "text-purple-600 dark:text-purple-400",
+  },
+  {
+    stroke: "#10b981",
+    bg: "bg-emerald-500",
+    text: "text-emerald-600 dark:text-emerald-400",
+  },
+  {
+    stroke: "#f59e0b",
+    bg: "bg-amber-500",
+    text: "text-amber-600 dark:text-amber-400",
+  },
+  {
+    stroke: "#f43f5e",
+    bg: "bg-rose-500",
+    text: "text-rose-600 dark:text-rose-400",
+  },
+  {
+    stroke: "#3b82f6",
+    bg: "bg-blue-500",
+    text: "text-blue-600 dark:text-blue-400",
+  },
+  {
+    stroke: "#14b8a6",
+    bg: "bg-teal-500",
+    text: "text-teal-600 dark:text-teal-400",
+  },
 ];
 
 const CategoryDonut = ({ products }) => {
@@ -156,12 +184,16 @@ const CategoryDonut = ({ products }) => {
 
   const entries = Object.entries(byCategory)
     .sort((a, b) => b[1] - a[1])
-    .map(([name, value], i) => ({ name, value, color: DONUT_COLORS[i % DONUT_COLORS.length] }));
+    .map(([name, value], i) => ({
+      name,
+      value,
+      color: DONUT_COLORS[i % DONUT_COLORS.length],
+    }));
 
   const total = entries.reduce((s, e) => s + e.value, 0);
 
-  const R = 60;      
-  const r = 38;      
+  const R = 60;
+  const r = 38;
   const cx = 80;
   const cy = 80;
   const circumference = 2 * Math.PI * R;
@@ -188,12 +220,12 @@ const CategoryDonut = ({ products }) => {
 
   return (
     <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-10">
-      
       <div className="relative flex-shrink-0">
         <svg width="160" height="160" viewBox="0 0 160 160">
-          
           <circle
-            cx={cx} cy={cy} r={R}
+            cx={cx}
+            cy={cy}
+            r={R}
             fill="none"
             stroke="currentColor"
             strokeWidth={R - r}
@@ -203,7 +235,9 @@ const CategoryDonut = ({ products }) => {
           {arcs.map((arc, i) => (
             <circle
               key={arc.name}
-              cx={cx} cy={cy} r={R}
+              cx={cx}
+              cy={cy}
+              r={R}
               fill="none"
               stroke={arc.color.stroke}
               strokeDasharray={`${arc.dash - 2} ${arc.gap + 2}`}
@@ -221,7 +255,9 @@ const CategoryDonut = ({ products }) => {
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           {hoveredEntry ? (
             <>
-              <span className={`text-xs font-semibold ${hoveredEntry.color.text} text-center leading-tight max-w-[70px] line-clamp-2`}>
+              <span
+                className={`text-xs font-semibold ${hoveredEntry.color.text} text-center leading-tight max-w-[70px] line-clamp-2`}
+              >
                 {hoveredEntry.name}
               </span>
               <span className="text-lg font-bold text-gray-900 dark:text-white mt-0.5">
@@ -233,9 +269,14 @@ const CategoryDonut = ({ products }) => {
             </>
           ) : (
             <>
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Total</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                Total
+              </span>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                ${total >= 1000 ? (total / 1000).toFixed(1) + "k" : total.toFixed(0)}
+                $
+                {total >= 1000
+                  ? (total / 1000).toFixed(1) + "k"
+                  : total.toFixed(0)}
               </span>
             </>
           )}
@@ -247,23 +288,32 @@ const CategoryDonut = ({ products }) => {
           <div
             key={arc.name}
             className={`flex items-center justify-between gap-3 px-3 py-2 rounded-xl transition-all cursor-default
-              ${hovered === i
-                ? "bg-gray-100 dark:bg-white/5"
-                : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
+              ${
+                hovered === i
+                  ? "bg-gray-100 dark:bg-white/5"
+                  : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
               }`}
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(null)}
           >
             <div className="flex items-center gap-2 min-w-0">
-              <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${arc.color.bg}`} />
-              <span className="text-sm text-gray-700 dark:text-gray-300 truncate">{arc.name}</span>
+              <span
+                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${arc.color.bg}`}
+              />
+              <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                {arc.name}
+              </span>
             </div>
             <div className="text-right flex-shrink-0">
               <span className={`text-xs font-semibold ${arc.color.text}`}>
                 {(arc.pct * 100).toFixed(1)}%
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                ${arc.value.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                $
+                {arc.value.toLocaleString("en-US", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
               </span>
             </div>
           </div>
@@ -274,7 +324,6 @@ const CategoryDonut = ({ products }) => {
 };
 
 const DashboardPage = ({ products, stats, setCurrentView }) => {
-  
   const byCategory = products.reduce((acc, p) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;
@@ -305,7 +354,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
 
   return (
     <div className="p-4 sm:p-6 space-y-5 sm:space-y-6">
-      
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
@@ -370,7 +418,6 @@ const DashboardPage = ({ products, stats, setCurrentView }) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
-        
         <div className="bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-5 shadow-sm dark:shadow-none">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center">

@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import DashboardPage from "../pages/DashboardPage";
 import InventoryPage from "../pages/InventoryPage";
+import CategoriesPage from "../pages/CategoriesPage";
 
 const MainLayout = ({
   currentView,
@@ -14,6 +15,10 @@ const MainLayout = ({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
+  categories,
+  onAddCategory,
+  onUpdateCategory,
+  onDeleteCategory,
 }) => {
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,6 +68,15 @@ const MainLayout = ({
               onAddProduct={onAddProduct}
               onUpdateProduct={onUpdateProduct}
               onDeleteProduct={onDeleteProduct}
+              categories={categories}
+            />
+          )}
+          {currentView === "categories" && (
+            <CategoriesPage
+              categories={categories}
+              onAddCategory={onAddCategory}
+              onUpdateCategory={onUpdateCategory}
+              onDeleteCategory={onDeleteCategory}
             />
           )}
         </main>

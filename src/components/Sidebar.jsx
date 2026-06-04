@@ -1,5 +1,3 @@
-
-
 const navItems = [
   {
     id: "dashboard",
@@ -39,6 +37,25 @@ const navItems = [
         <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
         <polyline points="3.29 7 12 12 20.71 7" />
         <line x1="12" y1="22" x2="12" y2="12" />
+      </svg>
+    ),
+  },
+  {
+    id: "categories",
+    label: "Categorías",
+    icon: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <line x1="7" y1="7" x2="7.01" y2="7" />
       </svg>
     ),
   },
@@ -153,7 +170,6 @@ const Sidebar = ({
         lg:static lg:translate-x-0 lg:z-auto lg:w-60 lg:flex-shrink-0
       `}
     >
-      
       <div className="flex items-center justify-between px-5 mb-4 lg:mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
@@ -230,7 +246,6 @@ const Sidebar = ({
         </p>
 
         <div className="flex flex-col gap-0.5 mx-3">
-          
           <button
             id="toggle-darkmode-btn"
             onClick={() => setIsDarkMode(!isDarkMode)}

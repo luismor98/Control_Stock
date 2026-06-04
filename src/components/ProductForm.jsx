@@ -1,19 +1,10 @@
 import { useState, useEffect } from "react";
 
-const CATEGORIES = [
-  "Electrónica",
-  "Ropa",
-  "Alimentos",
-  "Herramientas",
-  "Oficina",
-  "Hogar",
-  "Otro",
-];
-
-const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
+const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }) => {
+  const defaultCategory = categories.length > 0 ? categories[0].name : "";
   const emptyForm = {
     name: "",
-    category: "Electrónica",
+    category: defaultCategory,
     quantity: "",
     price: "",
     description: "",
@@ -176,13 +167,13 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit }) => {
             onChange={handleChange}
             className={inputClass("category")}
           >
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <option
-                key={cat}
-                value={cat}
+                key={cat.id}
+                value={cat.name}
                 className="bg-white dark:bg-gray-900"
               >
-                {cat}
+                {cat.name}
               </option>
             ))}
           </select>

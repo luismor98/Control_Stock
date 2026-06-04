@@ -2,6 +2,53 @@ import { useState, useEffect } from "react";
 import MainLayout from "./layouts/MainLayout";
 import Toast from "./components/Toast";
 
+const UNCATEGORIZED = {
+  id: 0,
+  name: "Sin categoría",
+  description: "Categoría por defecto para productos sin asignar",
+  protected: true,
+};
+
+const INITIAL_CATEGORIES = [
+  UNCATEGORIZED,
+  {
+    id: 1,
+    name: "Electrónica",
+    description: "Dispositivos y gadgets tecnológicos",
+    protected: false,
+  },
+  {
+    id: 2,
+    name: "Hogar",
+    description: "Artículos para el hogar y oficina",
+    protected: false,
+  },
+  {
+    id: 3,
+    name: "Oficina",
+    description: "Útiles y suministros de oficina",
+    protected: false,
+  },
+  {
+    id: 4,
+    name: "Ropa",
+    description: "Prendas de vestir y accesorios",
+    protected: false,
+  },
+  {
+    id: 5,
+    name: "Alimentos",
+    description: "Productos alimenticios y bebidas",
+    protected: false,
+  },
+  {
+    id: 6,
+    name: "Herramientas",
+    description: "Herramientas de trabajo y construcción",
+    protected: false,
+  },
+];
+
 const INITIAL_PRODUCTS = [
   {
     id: 1,
@@ -131,12 +178,20 @@ const computeStats = (products) => ({
 
 const App = () => {
   const [currentView, setCurrentView] = useState("dashboard");
-  const [isDarkMode, setIsDarkMode] = useState(true); 
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [products, setProducts] = useState([]);
   const [stats, setStats] = useState(computeStats([]));
   const [isLoading, setIsLoading] = useState(true);
   const [nextId, setNextId] = useState(INITIAL_PRODUCTS.length + 1);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+  const [categories, setCategories] = useState(INITIAL_CATEGORIES);
+  const [nextCategoryId, setNextCategoryId] = useState(
+    INITIAL_CATEGORIES.filter((c) => !c.protected).length + 1,
+  );
 
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type });
@@ -179,6 +234,42 @@ const App = () => {
   const handleDeleteProduct = (id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
     showToast("Producto eliminado del sistema", "error");
+  };
+
+  const handleAddCategory = (formData) => {
+    const newCategory = { id: nextCategoryId, ...formData, protected: false };
+    setCategories((prev) => [...prev, newCategory]);
+    setNextCategoryId((id) => id + 1);
+    showToast("Categoría creada correctamente", "success");
+  };
+
+  const handleUpdateCategory = (updatedCategory) => {
+    setCategories((prev) =>
+      prev.map((c) =>
+        c.id === updatedCategory.id
+          ? { ...updatedCategory, protected: c.protected }
+          : c,
+      ),
+    );
+    showToast("Categoría actualizada correctamente", "info");
+  };
+
+  const handleDeleteCategory = (id) => {
+    const category = categories.find((c) => c.id === id);
+    if (!category || category.protected) return;
+    // Migrar productos de la categoría eliminada a "Sin categoría"
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.category === category.name
+          ? { ...p, category: UNCATEGORIZED.name }
+          : p,
+      ),
+    );
+    setCategories((prev) => prev.filter((c) => c.id !== id));
+    showToast(
+      `Categoría "${category.name}" eliminada. Sus productos pasaron a "Sin categoría".`,
+      "error",
+    );
   };
 
   if (isLoading) {
@@ -229,14 +320,18 @@ const App = () => {
         onAddProduct={handleAddProduct}
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}
+        categories={categories}
+        onAddCategory={handleAddCategory}
+        onUpdateCategory={handleUpdateCategory}
+        onDeleteCategory={handleDeleteCategory}
       />
-      
+
       {/* Sistema global de notificaciones */}
-      <Toast 
-        show={toast.show} 
-        message={toast.message} 
-        type={toast.type} 
-        onClose={() => setToast((prev) => ({ ...prev, show: false }))} 
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast((prev) => ({ ...prev, show: false }))}
       />
     </>
   );

@@ -7,6 +7,7 @@ const InventoryPage = ({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
+  categories,
 }) => {
   const [editingProduct, setEditingProduct] = useState(null);
 
@@ -46,6 +47,7 @@ const InventoryPage = ({
             onSubmit={handleSubmit}
             editingProduct={editingProduct}
             onCancelEdit={handleCancelEdit}
+            categories={categories}
           />
 
           <div className="mt-4 bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-4 space-y-3 shadow-sm dark:shadow-none">
