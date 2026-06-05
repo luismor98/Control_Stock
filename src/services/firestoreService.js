@@ -27,7 +27,8 @@ export const addProduct = async (productData) => {
 export const updateProduct = async (id, updatedData) => {
   const productRef = doc(db, "products", id);
   // Removemos el id del updatedData para no guardarlo duplicado en el documento
-  const { id: _, ...dataToUpdate } = updatedData;
+  const dataToUpdate = { ...updatedData };
+  delete dataToUpdate.id;
   await updateDoc(productRef, dataToUpdate);
   return updatedData;
 };
@@ -52,7 +53,8 @@ export const addCategory = async (categoryData) => {
 
 export const updateCategory = async (id, updatedData) => {
   const categoryRef = doc(db, "categories", id);
-  const { id: _, ...dataToUpdate } = updatedData;
+  const dataToUpdate = { ...updatedData };
+  delete dataToUpdate.id;
   await updateDoc(categoryRef, dataToUpdate);
   return updatedData;
 };

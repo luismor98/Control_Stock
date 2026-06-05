@@ -198,14 +198,17 @@ const CategoryDonut = ({ products }) => {
   const cy = 80;
   const circumference = 2 * Math.PI * R;
 
-  let offset = 0;
-  const arcs = entries.map((entry) => {
+  const arcs = entries.map((entry, index) => {
     const pct = total > 0 ? entry.value / total : 0;
     const dash = pct * circumference;
     const gap = circumference - dash;
-    const arc = { ...entry, pct, dash, gap, offset };
-    offset += dash;
-    return arc;
+    
+    const offset = entries.slice(0, index).reduce((sum, prevEntry) => {
+      const prevPct = total > 0 ? prevEntry.value / total : 0;
+      return sum + (prevPct * circumference);
+    }, 0);
+
+    return { ...entry, pct, dash, gap, offset };
   });
 
   const hoveredEntry = hovered !== null ? arcs[hovered] : null;

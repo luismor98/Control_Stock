@@ -154,7 +154,7 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
     }
   };
 
-  const SortIcon = ({ field }) => {
+  const renderSortIcon = (field) => {
     if (sortField !== field)
       return <span className="text-gray-400 dark:text-gray-600 ml-1">↕</span>;
     return (
@@ -277,22 +277,22 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
               <thead className="bg-gray-50 dark:bg-gray-900/40 border-b border-gray-100 dark:border-white/5">
                 <tr>
                   <th className={thClass} onClick={() => handleSort("name")}>
-                    Nombre <SortIcon field="name" />
+                    Nombre {renderSortIcon("name")}
                   </th>
                   <th
                     className={thClass}
                     onClick={() => handleSort("category")}
                   >
-                    Categoría <SortIcon field="category" />
+                    Categoría {renderSortIcon("category")}
                   </th>
                   <th
                     className={thClass}
                     onClick={() => handleSort("quantity")}
                   >
-                    Cantidad <SortIcon field="quantity" />
+                    Cantidad {renderSortIcon("quantity")}
                   </th>
                   <th className={thClass} onClick={() => handleSort("price")}>
-                    Precio <SortIcon field="price" />
+                    Precio {renderSortIcon("price")}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Valor Total
