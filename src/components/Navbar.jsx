@@ -1,8 +1,11 @@
+import { useUI } from "../hooks/useUI";
 
-const Navbar = ({ currentView, toggleSidebar }) => {
+const Navbar = ({ toggleSidebar }) => {
+  const { currentView } = useUI();
   const viewTitles = {
     dashboard: "Dashboard",
     inventory: "Gestión de Inventario",
+    categories: "Gestión de Categorías",
   };
 
   return (
@@ -81,3 +84,4 @@ const Navbar = ({ currentView, toggleSidebar }) => {
 };
 
 export default Navbar;
+

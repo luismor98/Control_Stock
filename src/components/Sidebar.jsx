@@ -149,14 +149,15 @@ const IconLogout = () => (
   </svg>
 );
 
+import { useUI } from "../hooks/useUI";
+
 const Sidebar = ({
-  currentView,
-  setCurrentView,
   isOpen,
   onClose,
-  isDarkMode,
-  setIsDarkMode,
+  handleSetCurrentView,
 }) => {
+  const { currentView, isDarkMode, toggleDarkMode } = useUI();
+
   return (
     <aside
       className={`
@@ -219,7 +220,7 @@ const Sidebar = ({
           <button
             key={item.id}
             id={`nav-${item.id}-btn`}
-            onClick={() => setCurrentView(item.id)}
+            onClick={() => handleSetCurrentView(item.id)}
             className={`mx-3 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
               ${
                 isActive
@@ -248,7 +249,7 @@ const Sidebar = ({
         <div className="flex flex-col gap-0.5 mx-3">
           <button
             id="toggle-darkmode-btn"
-            onClick={() => setIsDarkMode(!isDarkMode)}
+            onClick={toggleDarkMode}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
               text-gray-600 hover:text-gray-900 hover:bg-gray-200
               dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5

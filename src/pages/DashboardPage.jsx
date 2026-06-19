@@ -326,7 +326,12 @@ const CategoryDonut = ({ products }) => {
   );
 };
 
-const DashboardPage = ({ products, stats, setCurrentView }) => {
+import { useProducts } from "../hooks/useProducts";
+import { useUI } from "../hooks/useUI";
+
+const DashboardPage = () => {
+  const { products, stats } = useProducts();
+  const { setCurrentView } = useUI();
   const byCategory = products.reduce((acc, p) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;

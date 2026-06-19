@@ -2,21 +2,20 @@ import { useState } from "react";
 import ProductForm from "../components/ProductForm";
 import ProductTable from "../components/ProductTable";
 
-const InventoryPage = ({
-  products,
-  onAddProduct,
-  onUpdateProduct,
-  onDeleteProduct,
-  categories,
-}) => {
+import { useProducts } from "../hooks/useProducts";
+import { useCategories } from "../hooks/useCategories";
+
+const InventoryPage = () => {
+  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { categories } = useCategories();
   const [editingProduct, setEditingProduct] = useState(null);
 
   const handleSubmit = (formData) => {
     if (editingProduct) {
-      onUpdateProduct({ ...formData, id: editingProduct.id });
+      updateProduct({ ...formData, id: editingProduct.id });
       setEditingProduct(null);
     } else {
-      onAddProduct(formData);
+      addProduct(formData);
     }
   };
 
@@ -127,7 +126,7 @@ const InventoryPage = ({
         <ProductTable
           products={products}
           onEdit={handleEdit}
-          onDelete={onDeleteProduct}
+          onDelete={deleteProduct}
         />
       </div>
     </div>

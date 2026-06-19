@@ -373,12 +373,10 @@ const CategoryRow = ({ category, index, onEdit, onDelete }) => {
 };
 
 // ── Página Principal ────────────────────────────────────────────────
-const CategoriesPage = ({
-  categories,
-  onAddCategory,
-  onUpdateCategory,
-  onDeleteCategory,
-}) => {
+import { useCategories } from "../hooks/useCategories";
+
+const CategoriesPage = () => {
+  const { categories, addCategory, updateCategory, deleteCategory } = useCategories();
   const [modal, setModal] = useState(null); // null | { type: "create" | "edit" | "delete", data?: category }
 
   const openCreate = () => setModal({ type: "create" });
@@ -487,21 +485,21 @@ const CategoriesPage = ({
         <CategoryModal
           category={null}
           onClose={closeModal}
-          onSubmit={onAddCategory}
+          onSubmit={addCategory}
         />
       )}
       {modal?.type === "edit" && (
         <CategoryModal
           category={modal.data}
           onClose={closeModal}
-          onSubmit={(data) => onUpdateCategory({ ...data, id: modal.data.id })}
+          onSubmit={(data) => updateCategory({ ...data, id: modal.data.id })}
         />
       )}
       {modal?.type === "delete" && (
         <DeleteConfirmModal
           category={modal.data}
           onClose={closeModal}
-          onConfirm={onDeleteCategory}
+          onConfirm={deleteCategory}
         />
       )}
     </div>

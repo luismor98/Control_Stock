@@ -4,23 +4,10 @@ import Sidebar from "../components/Sidebar";
 import DashboardPage from "../pages/DashboardPage";
 import InventoryPage from "../pages/InventoryPage";
 import CategoriesPage from "../pages/CategoriesPage";
+import { useUI } from "../hooks/useUI";
 
-const MainLayout = ({
-  currentView,
-  setCurrentView,
-  isDarkMode,
-  setIsDarkMode,
-  products,
-  stats,
-  onAddProduct,
-  onUpdateProduct,
-  onDeleteProduct,
-  categories,
-  onAddCategory,
-  onUpdateCategory,
-  onDeleteCategory,
-}) => {
-  
+const MainLayout = () => {
+  const { currentView, setCurrentView } = useUI();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -43,42 +30,18 @@ const MainLayout = ({
       )}
 
       <Sidebar
-        currentView={currentView}
-        setCurrentView={handleSetCurrentView}
         isOpen={isSidebarOpen}
         onClose={closeSidebar}
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
+        handleSetCurrentView={handleSetCurrentView}
       />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <Navbar currentView={currentView} toggleSidebar={toggleSidebar} />
+        <Navbar toggleSidebar={toggleSidebar} />
 
         <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
-          {currentView === "dashboard" && (
-            <DashboardPage
-              products={products}
-              stats={stats}
-              setCurrentView={setCurrentView}
-            />
-          )}
-          {currentView === "inventory" && (
-            <InventoryPage
-              products={products}
-              onAddProduct={onAddProduct}
-              onUpdateProduct={onUpdateProduct}
-              onDeleteProduct={onDeleteProduct}
-              categories={categories}
-            />
-          )}
-          {currentView === "categories" && (
-            <CategoriesPage
-              categories={categories}
-              onAddCategory={onAddCategory}
-              onUpdateCategory={onUpdateCategory}
-              onDeleteCategory={onDeleteCategory}
-            />
-          )}
+          {currentView === "dashboard" && <DashboardPage />}
+          {currentView === "inventory" && <InventoryPage />}
+          {currentView === "categories" && <CategoriesPage />}
         </main>
       </div>
     </div>
