@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "./layouts/MainLayout";
+import LandingPage from "./pages/LandingPage";
 import Toast from "./components/Toast";
 import { useProducts } from "./hooks/useProducts";
 import { useCategories } from "./hooks/useCategories";
 import { useUI } from "./hooks/useUI";
 
 const App = () => {
+  const [showLanding, setShowLanding] = useState(true);
   const { loadProducts, isLoading: productsLoading } = useProducts();
   const { loadCategories, isLoading: categoriesLoading } = useCategories();
   const { isDarkMode, toast, closeToast, initializeDarkMode } = useUI();
@@ -23,6 +25,10 @@ const App = () => {
     loadCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (showLanding) {
+    return <LandingPage onEnterApp={() => setShowLanding(false)} />;
+  }
 
   if (isLoading) {
     return (
