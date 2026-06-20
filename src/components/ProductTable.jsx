@@ -26,7 +26,7 @@ const CategoryBadge = ({ category }) => {
   );
 };
 
-const ProductCard = ({ product, onEdit, onDelete }) => {
+const ProductCard = ({ product, onEdit, onDelete, isAdmin }) => {
   const isLowStock =
     product.quantity <= STOCK_THRESHOLD && product.quantity > 0;
   const isOutOfStock = product.quantity === 0;
@@ -90,56 +90,58 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
             </span>
           )}
         </div>
-        <div className="flex gap-2">
-          <button
-            id={`edit-btn-${product.id}`}
-            onClick={() => onEdit(product)}
-            className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 flex items-center justify-center transition-all border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
-            title="Editar"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        {isAdmin && (
+          <div className="flex gap-2">
+            <button
+              id={`edit-btn-${product.id}`}
+              onClick={() => onEdit(product)}
+              className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 flex items-center justify-center transition-all border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
+              title="Editar"
             >
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-          <button
-            id={`delete-btn-${product.id}`}
-            onClick={() => onDelete(product.id)}
-            className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 flex items-center justify-center transition-all border border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30"
-            title="Eliminar"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </button>
+            <button
+              id={`delete-btn-${product.id}`}
+              onClick={() => onDelete(product.id)}
+              className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 flex items-center justify-center transition-all border border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30"
+              title="Eliminar"
             >
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-            </svg>
-          </button>
-        </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-const ProductTable = ({ products, onEdit, onDelete }) => {
+const ProductTable = ({ products, onEdit, onDelete, isAdmin }) => {
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState("name");
   const [sortDir, setSortDir] = useState("asc");
@@ -268,6 +270,7 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
                 product={product}
                 onEdit={onEdit}
                 onDelete={handleDeleteClick}
+                isAdmin={isAdmin}
               />
             ))}
           </div>
@@ -297,9 +300,11 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Valor Total
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    Acciones
-                  </th>
+                  {isAdmin && (
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-white/[0.04]">
@@ -356,52 +361,54 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
                           ${(product.price * product.quantity).toFixed(2)}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            id={`edit-btn-${product.id}`}
-                            onClick={() => onEdit(product)}
-                            className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center justify-center transition-all duration-200 border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
-                            title="Editar"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-3.5 h-3.5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                      {isAdmin && (
+                        <td className="px-4 py-3.5">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              id={`edit-btn-${product.id}`}
+                              onClick={() => onEdit(product)}
+                              className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center justify-center transition-all duration-200 border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
+                              title="Editar"
                             >
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                            </svg>
-                          </button>
-                          <button
-                            id={`delete-btn-${product.id}`}
-                            onClick={() => handleDeleteClick(product.id)}
-                            className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 hover:text-rose-700 dark:hover:text-rose-300 flex items-center justify-center transition-all duration-200 border border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30"
-                            title="Eliminar"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-3.5 h-3.5"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
+                            <button
+                              id={`delete-btn-${product.id}`}
+                              onClick={() => handleDeleteClick(product.id)}
+                              className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 hover:text-rose-700 dark:hover:text-rose-300 flex items-center justify-center transition-all duration-200 border border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30"
+                              title="Eliminar"
                             >
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6M14 11v6" />
-                              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-                            </svg>
-                          </button>
-                        </div>
-                      </td>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6l-1 14H6L5 6" />
+                                <path d="M10 11v6M14 11v6" />
+                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                              </svg>
+                            </button>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}

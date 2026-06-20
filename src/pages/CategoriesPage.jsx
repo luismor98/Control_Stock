@@ -267,7 +267,7 @@ const DeleteConfirmModal = ({ category, onClose, onConfirm }) => (
 );
 
 // ── Fila de la tabla ────────────────────────────────────────────────
-const CategoryRow = ({ category, index, onEdit, onDelete }) => {
+const CategoryRow = ({ category, index, onEdit, onDelete, isAdmin }) => {
   const ACCENT_COLORS = [
     "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300",
     "bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300",
@@ -312,72 +312,78 @@ const CategoryRow = ({ category, index, onEdit, onDelete }) => {
           ID #{category.id}
         </span>
       </td>
-      <td className="px-5 py-4 text-right">
-        <div className="flex items-center justify-center gap-2">
-          <button
-            id={`edit-cat-${category.id}-btn`}
-            onClick={() => onEdit(category)}
-            title="Editar"
-            className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center justify-center transition-all duration-200 border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+      {isAdmin && (
+        <td className="px-5 py-4 text-right">
+          <div className="flex items-center justify-center gap-2">
+            <button
+              id={`edit-cat-${category.id}-btn`}
+              onClick={() => onEdit(category)}
+              title="Editar"
+              className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center justify-center transition-all duration-200 border border-indigo-200 dark:border-indigo-500/10 hover:border-indigo-300 dark:hover:border-indigo-500/30"
             >
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-          </button>
-          <button
-            id={`delete-cat-${category.id}-btn`}
-            onClick={() => !category.protected && onDelete(category)}
-            title={
-              category.protected
-                ? "Esta categoría no puede eliminarse"
-                : "Eliminar"
-            }
-            disabled={category.protected}
-            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 border
-              ${
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </button>
+            <button
+              id={`delete-cat-${category.id}-btn`}
+              onClick={() => !category.protected && onDelete(category)}
+              title={
                 category.protected
-                  ? "bg-gray-50 dark:bg-gray-800/30 text-gray-300 dark:text-gray-700 border-gray-100 dark:border-gray-700/30 cursor-not-allowed"
-                  : "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 hover:text-rose-700 dark:hover:text-rose-300 border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30 cursor-pointer"
-              }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+                  ? "Esta categoría no puede eliminarse"
+                  : "Eliminar"
+              }
+              disabled={category.protected}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 border
+                ${
+                  category.protected
+                    ? "bg-gray-50 dark:bg-gray-800/30 text-gray-300 dark:text-gray-700 border-gray-100 dark:border-gray-700/30 cursor-not-allowed"
+                    : "bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-500/25 hover:text-rose-700 dark:hover:text-rose-300 border-rose-200 dark:border-rose-500/10 hover:border-rose-300 dark:hover:border-rose-500/30 cursor-pointer"
+                }`}
             >
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-            </svg>
-          </button>
-        </div>
-      </td>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-3.5 h-3.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+              </svg>
+            </button>
+          </div>
+        </td>
+      )}
     </tr>
   );
 };
 
 // ── Página Principal ────────────────────────────────────────────────
 import { useCategories } from "../hooks/useCategories";
+import { useSelector } from "react-redux";
 
 const CategoriesPage = () => {
   const { categories, addCategory, updateCategory, deleteCategory } = useCategories();
   const [modal, setModal] = useState(null); // null | { type: "create" | "edit" | "delete", data?: category }
+
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.rol === 'admin';
 
   const openCreate = () => setModal({ type: "create" });
   const openEdit = (cat) => setModal({ type: "edit", data: cat });
@@ -396,17 +402,19 @@ const CategoriesPage = () => {
             Organiza y administra las categorías de tus productos
           </p>
         </div>
-        <button
-          id="add-category-btn"
-          onClick={openCreate}
-          className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500
-            text-white text-xs sm:text-sm font-medium transition-all duration-200
-            shadow-lg shadow-indigo-500/20 flex-shrink-0 active:scale-95"
-        >
-          <IconPlus />
-          <span className="hidden sm:inline">Nueva categoría</span>
-          <span className="sm:hidden">Nueva</span>
-        </button>
+        {isAdmin && (
+          <button
+            id="add-category-btn"
+            onClick={openCreate}
+            className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500
+              text-white text-xs sm:text-sm font-medium transition-all duration-200
+              shadow-lg shadow-indigo-500/20 flex-shrink-0 active:scale-95"
+          >
+            <IconPlus />
+            <span className="hidden sm:inline">Nueva categoría</span>
+            <span className="sm:hidden">Nueva</span>
+          </button>
+        )}
       </div>
 
       {/* ── Stats rápidas ── */}
@@ -441,12 +449,14 @@ const CategoriesPage = () => {
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-gray-400">
             <IconTag className="w-10 h-10 opacity-30" />
             <p className="text-sm font-medium">No hay categorías creadas</p>
-            <button
-              onClick={openCreate}
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
-            >
-              Crear la primera categoría
-            </button>
+            {isAdmin && (
+              <button
+                onClick={openCreate}
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+              >
+                Crear la primera categoría
+              </button>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -459,9 +469,11 @@ const CategoriesPage = () => {
                   <th className="px-5 py-3.5 text-left text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     Identificador
                   </th>
-                  <th className="px-5 py-3.5 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                    Acciones
-                  </th>
+                  {isAdmin && (
+                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -472,6 +484,7 @@ const CategoriesPage = () => {
                     index={i}
                     onEdit={openEdit}
                     onDelete={openDelete}
+                    isAdmin={isAdmin}
                   />
                 ))}
               </tbody>

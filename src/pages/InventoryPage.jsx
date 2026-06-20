@@ -4,11 +4,15 @@ import ProductTable from "../components/ProductTable";
 
 import { useProducts } from "../hooks/useProducts";
 import { useCategories } from "../hooks/useCategories";
+import { useSelector } from "react-redux";
 
 const InventoryPage = () => {
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
   const { categories } = useCategories();
   const [editingProduct, setEditingProduct] = useState(null);
+  
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.rol === 'admin';
 
   const handleSubmit = (formData) => {
     if (editingProduct) {
@@ -80,12 +84,14 @@ const InventoryPage = () => {
       <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-4 sm:gap-5 items-start">
         
         <div className="xl:sticky xl:top-6">
-          <ProductForm
-            onSubmit={handleSubmit}
-            editingProduct={editingProduct}
-            onCancelEdit={handleCancelEdit}
-            categories={categories}
-          />
+          {isAdmin && (
+            <ProductForm
+              onSubmit={handleSubmit}
+              editingProduct={editingProduct}
+              onCancelEdit={handleCancelEdit}
+              categories={categories}
+            />
+          )}
 
           <div className="mt-4 bg-white dark:bg-transparent dark:glass rounded-2xl border border-gray-200 dark:border-white/5 p-4 space-y-3 shadow-sm dark:shadow-none">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -127,6 +133,7 @@ const InventoryPage = () => {
           products={products}
           onEdit={handleEdit}
           onDelete={deleteProduct}
+          isAdmin={isAdmin}
         />
       </div>
     </div>

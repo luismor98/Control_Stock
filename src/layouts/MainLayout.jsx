@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import DashboardPage from "../pages/DashboardPage";
 import InventoryPage from "../pages/InventoryPage";
 import CategoriesPage from "../pages/CategoriesPage";
+import SuppliersPage from "../pages/SuppliersPage";
 import { useUI } from "../hooks/useUI";
 
 const MainLayout = () => {
@@ -42,6 +43,7 @@ const MainLayout = () => {
           {currentView === "dashboard" && <DashboardPage />}
           {currentView === "inventory" && <InventoryPage />}
           {currentView === "categories" && <CategoriesPage />}
+          {currentView === "suppliers" && <SuppliersPage />}
         </main>
       </div>
     </div>

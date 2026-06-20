@@ -1,11 +1,15 @@
 import { useUI } from "../hooks/useUI";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ toggleSidebar }) => {
   const { currentView } = useUI();
+  const { user } = useSelector((state) => state.auth);
+
   const viewTitles = {
     dashboard: "Dashboard",
     inventory: "Gestión de Inventario",
     categories: "Gestión de Categorías",
+    suppliers: "Gestión de Proveedores",
   };
 
   return (
@@ -68,15 +72,20 @@ const Navbar = ({ toggleSidebar }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex items-center gap-4 flex-shrink-0">
         <div className="hidden sm:block text-right">
-          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors">
-            Administrador
+          <p className="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors capitalize">
+            {user?.name || "Usuario"}
           </p>
-          <p className="text-xs text-gray-500">Sistema de Inventario</p>
+          <p className="text-xs text-gray-500">
+            {user?.rol === "admin" ? "Administrador" : "Operador"}
+          </p>
         </div>
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center font-bold text-sm text-white shadow-md shadow-purple-500/20 cursor-pointer ring-2 ring-white/10 hover:ring-indigo-400/50 transition-all flex-shrink-0">
-          AD
+        
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center font-bold text-sm text-white shadow-md shadow-purple-500/20 ring-2 ring-white/10 transition-all flex-shrink-0 uppercase">
+            {user?.name ? user.name.substring(0, 2) : "US"}
+          </div>
         </div>
       </div>
     </header>

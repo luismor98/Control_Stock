@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import MainLayout from "./layouts/MainLayout";
 import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/Auth/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
 import Toast from "./components/Toast";
 import { useProducts } from "./hooks/useProducts";
 import { useCategories } from "./hooks/useCategories";
+import { useSuppliers } from "./hooks/useSuppliers";
 import { useUI } from "./hooks/useUI";
 
 const App = () => {
-  const [showLanding, setShowLanding] = useState(true);
+  const [authView, setAuthView] = useState("landing"); // 'landing', 'login', 'register'
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  
   const { loadProducts, isLoading: productsLoading } = useProducts();
   const { loadCategories, isLoading: categoriesLoading } = useCategories();
+  const { loadSuppliers, isLoading: suppliersLoading } = useSuppliers();
   const { isDarkMode, toast, closeToast, initializeDarkMode } = useUI();
 
-  const isLoading = productsLoading || categoriesLoading;
+  const isLoading = productsLoading || categoriesLoading || suppliersLoading;
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDarkMode);
@@ -23,12 +30,20 @@ const App = () => {
     initializeDarkMode(true); // O recuperar de localStorage si existiera
     loadProducts();
     loadCategories();
+    loadSuppliers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (showLanding) {
-    return <LandingPage onEnterApp={() => setShowLanding(false)} />;
+  if (!isAuthenticated) {
+    if (authView === "login") {
+      return <LoginPage onNavigateToRegister={() => setAuthView("register")} />;
+    }
+    if (authView === "register") {
+      return <RegisterPage onNavigateToLogin={() => setAuthView("login")} />;
+    }
+    return <LandingPage onEnterApp={() => setAuthView("login")} />;
   }
+
 
   if (isLoading) {
     return (

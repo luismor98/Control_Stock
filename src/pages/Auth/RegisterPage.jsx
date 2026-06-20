@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerStart, registerSuccess, registerFailure, clearError } from '../../store/slices/authSlice';
+import { registerUser, clearError } from '../../store/slices/authSlice';
 
 const RegisterPage = ({ onNavigateToLogin }) => {
   const dispatch = useDispatch();
@@ -44,20 +44,9 @@ const RegisterPage = ({ onNavigateToLogin }) => {
     e.preventDefault();
     if (!isFormValid) return;
 
-    dispatch(registerStart());
-    
-    try {
-      // Aquí iría la llamada real a tu API o Firebase
-      // Simulando una llamada asíncrona
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulación de éxito
-      dispatch(registerSuccess({ email: formData.email, name: formData.name }));
-      console.log('Registro exitoso');
-    } catch (err) {
-      dispatch(registerFailure('Ocurrió un error al crear la cuenta. Inténtalo de nuevo.'));
-    }
+    dispatch(registerUser(formData));
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30 py-12">

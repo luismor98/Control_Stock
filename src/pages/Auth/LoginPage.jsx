@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure, clearError } from '../../store/slices/authSlice';
+import { loginUser, clearError } from '../../store/slices/authSlice';
 
 const LoginPage = ({ onNavigateToRegister }) => {
   const dispatch = useDispatch();
@@ -27,20 +27,9 @@ const LoginPage = ({ onNavigateToRegister }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginStart());
-    
-    try {
-      // Aquí iría la llamada real a tu API o Firebase
-      // Simulando una llamada asíncrona
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulación de éxito
-      dispatch(loginSuccess({ email: formData.email, name: 'Usuario' }));
-      console.log('Inicio de sesión exitoso');
-    } catch (err) {
-      dispatch(loginFailure('Credenciales incorrectas o error en el servidor.'));
-    }
+    dispatch(loginUser(formData));
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30">
