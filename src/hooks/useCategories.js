@@ -6,11 +6,12 @@ import {
   deleteCategoryAsync 
 } from '../store/slices/categoriesSlice';
 import { migrateProductsCategoryAsync } from '../store/slices/productsSlice';
-import { showToast } from '../store/slices/uiSlice';
+import { useUI } from './useUI';
 
 export const useCategories = () => {
   const dispatch = useDispatch();
   const { items: categories, status, error } = useSelector((state) => state.categories);
+  const { triggerToast } = useUI();
 
   const isLoading = status === 'loading';
 
@@ -21,20 +22,20 @@ export const useCategories = () => {
   const addCategory = async (formData) => {
     try {
       await dispatch(addCategoryAsync(formData)).unwrap();
-      dispatch(showToast({ message: "Categoría creada correctamente", type: "success" }));
+      triggerToast("Categoría creada correctamente", "success");
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al crear categoría", type: "error" }));
+      triggerToast("Error al crear categoría", "error");
     }
   };
 
   const updateCategory = async (updatedCategory) => {
     try {
       await dispatch(updateCategoryAsync(updatedCategory)).unwrap();
-      dispatch(showToast({ message: "Categoría actualizada correctamente", type: "info" }));
+      triggerToast("Categoría actualizada correctamente", "info");
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al actualizar categoría", type: "error" }));
+      triggerToast("Error al actualizar categoría", "error");
     }
   };
 
@@ -47,13 +48,13 @@ export const useCategories = () => {
       await dispatch(migrateProductsCategoryAsync(category.name)).unwrap();
       // 2. Delete the category
       await dispatch(deleteCategoryAsync(id)).unwrap();
-      dispatch(showToast({ 
-        message: `Categoría "${category.name}" eliminada. Sus productos pasaron a "Sin categoría".`, 
-        type: "error" 
-      }));
+      triggerToast(
+        `Categoría "${category.name}" eliminada. Sus productos pasaron a "Sin categoría".`, 
+        "error"
+      );
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al eliminar categoría", type: "error" }));
+      triggerToast("Error al eliminar categoría", "error");
     }
   };
 

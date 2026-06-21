@@ -313,7 +313,7 @@ const CategoryRow = ({ category, index, onEdit, onDelete, isAdmin }) => {
         </span>
       </td>
       {isAdmin && (
-        <td className="px-5 py-4 text-right">
+        <td className="px-5 py-4 text-center">
           <div className="flex items-center justify-center gap-2">
             <button
               id={`edit-cat-${category.id}-btn`}
@@ -470,7 +470,7 @@ const CategoriesPage = () => {
                     Identificador
                   </th>
                   {isAdmin && (
-                    <th className="px-5 py-3.5 text-right text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                    <th className="px-5 py-3.5 text-center text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Acciones
                     </th>
                   )}

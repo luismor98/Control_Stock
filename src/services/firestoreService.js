@@ -11,6 +11,7 @@ import { db } from "../config/firebase";
 // Referencias a las colecciones
 const productsCollection = collection(db, "products");
 const categoriesCollection = collection(db, "categories");
+const suppliersCollection = collection(db, "suppliers");
 
 // --- PRODUCTOS ---
 
@@ -62,5 +63,31 @@ export const updateCategory = async (id, updatedData) => {
 export const deleteCategory = async (id) => {
   const categoryRef = doc(db, "categories", id);
   await deleteDoc(categoryRef);
+  return id;
+};
+
+// --- PROVEEDORES ---
+
+export const getSuppliers = async () => {
+  const snapshot = await getDocs(suppliersCollection);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
+
+export const addSupplier = async (supplierData) => {
+  const docRef = await addDoc(suppliersCollection, supplierData);
+  return { id: docRef.id, ...supplierData };
+};
+
+export const updateSupplier = async (id, updatedData) => {
+  const supplierRef = doc(db, "suppliers", id);
+  const dataToUpdate = { ...updatedData };
+  delete dataToUpdate.id;
+  await updateDoc(supplierRef, dataToUpdate);
+  return updatedData;
+};
+
+export const deleteSupplier = async (id) => {
+  const supplierRef = doc(db, "suppliers", id);
+  await deleteDoc(supplierRef);
   return id;
 };

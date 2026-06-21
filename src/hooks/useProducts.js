@@ -5,13 +5,14 @@ import {
   updateProductAsync, 
   deleteProductAsync 
 } from '../store/slices/productsSlice';
-import { showToast } from '../store/slices/uiSlice';
+import { useUI } from './useUI';
 
 const STOCK_THRESHOLD = 5;
 
 export const useProducts = () => {
   const dispatch = useDispatch();
   const { items: products, status, error } = useSelector((state) => state.products);
+  const { triggerToast } = useUI();
 
   const isLoading = status === 'loading';
 
@@ -22,30 +23,30 @@ export const useProducts = () => {
   const addProduct = async (formData) => {
     try {
       await dispatch(addProductAsync(formData)).unwrap();
-      dispatch(showToast({ message: "Producto agregado al inventario", type: "success" }));
+      triggerToast("Producto agregado al inventario", "success");
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al agregar producto", type: "error" }));
+      triggerToast("Error al agregar producto", "error");
     }
   };
 
   const updateProduct = async (updatedProduct) => {
     try {
       await dispatch(updateProductAsync(updatedProduct)).unwrap();
-      dispatch(showToast({ message: "Producto actualizado correctamente", type: "info" }));
+      triggerToast("Producto actualizado correctamente", "info");
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al actualizar producto", type: "error" }));
+      triggerToast("Error al actualizar producto", "error");
     }
   };
 
   const deleteProduct = async (id) => {
     try {
       await dispatch(deleteProductAsync(id)).unwrap();
-      dispatch(showToast({ message: "Producto eliminado del sistema", type: "error" }));
+      triggerToast("Producto eliminado del sistema", "error");
     } catch (err) {
       console.error(err);
-      dispatch(showToast({ message: "Error al eliminar producto", type: "error" }));
+      triggerToast("Error al eliminar producto", "error");
     }
   };
 
