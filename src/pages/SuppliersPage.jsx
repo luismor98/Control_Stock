@@ -457,7 +457,7 @@ const SupplierModal = ({ supplier, onClose, onSubmit }) => {
 // ── Modal de confirmación de eliminación ────────────────────────────
 const DeleteConfirmModal = ({ supplier, onClose, onConfirm }) => (
   <div
-    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+    className="fixed inset-0 z-50 flex items-center justify-center p-4  bg-black/60 backdrop-blur-sm"
     onClick={(e) => {
       if (e.target === e.currentTarget) onClose();
     }}

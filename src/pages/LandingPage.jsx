@@ -1,14 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 
-// Intersection Observer Hook para animaciones al hacer scroll
 const useIntersectionObserver = (options = {}) => {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const targetRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsIntersecting(entry.isIntersecting);
-    }, { threshold: 0.1, ...options });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, ...options },
+    );
 
     const currentRef = targetRef.current;
     if (currentRef) {
@@ -25,246 +30,624 @@ const useIntersectionObserver = (options = {}) => {
   return [targetRef, isIntersecting];
 };
 
-const LandingPage = ({ onEnterApp }) => {
-  const [heroRef, heroIntersecting] = useIntersectionObserver({ threshold: 0.1 });
-  const [featuresRef, featuresIntersecting] = useIntersectionObserver({ threshold: 0.1 });
-  const [techRef, techIntersecting] = useIntersectionObserver({ threshold: 0.1 });
-
+const FadeIn = ({ children, delay = "", className = "" }) => {
+  const [ref, isVisible] = useIntersectionObserver();
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"} ${delay} ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+const LandingPage = ({ onEnterApp }) => {
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-50 font-sans antialiased selection:bg-indigo-500/30 overflow-x-hidden">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b-0 border-t-0 border-x-0 !border-b-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+          <div className="flex items-center gap-3 cursor-pointer">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
               </svg>
             </div>
-            <span className="text-xl font-bold gradient-text tracking-tight">Control Stock</span>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-            <a href="#inicio" className="hover:text-white transition-colors">Inicio</a>
-            <a href="#caracteristicas" className="hover:text-white transition-colors">Características</a>
-            <a href="#tecnologia" className="hover:text-white transition-colors">Tecnología</a>
-            <a href="#precios" className="hover:text-white transition-colors">Precios</a>
+            <span className="text-xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+              Control Stock
+            </span>
           </div>
 
-          <button 
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#inicio" className="hover:text-white transition-colors">
+              Inicio
+            </a>
+            <a href="#solucion" className="hover:text-white transition-colors">
+              Solución
+            </a>
+            <a
+              href="#caracteristicas"
+              className="hover:text-white transition-colors"
+            >
+              Características
+            </a>
+            <a
+              href="#metricas"
+              className="hover:text-white transition-colors"
+            >
+              Resultados
+            </a>
+            <a
+              href="#testimonios"
+              className="hover:text-white transition-colors"
+            >
+              Clientes
+            </a>
+            <a
+              href="#newsletter"
+              className="hover:text-white transition-colors"
+            >
+              Suscribirse
+            </a>
+          </div>
+
+          <button
             onClick={onEnterApp}
-            className="px-5 py-2.5 rounded-lg text-sm font-semibold glass glass-hover hover:text-white transition-all border border-white/10"
+            className="px-6 py-2.5 rounded-lg text-sm font-semibold bg-white/10 hover:bg-white/20 text-white transition-all border border-white/10"
           >
             Iniciar Sesión
           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="inicio" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
-        {/* Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-          <div 
-            ref={heroRef} 
-            className={`space-y-8 ${heroIntersecting ? 'animate-slideUpAndFade' : 'opacity-0'}`}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-indigo-500/30 text-xs font-medium text-indigo-300">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-              </span>
-              Nuevo: Sincronización en tiempo real
-            </div>
-            
-            <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1]">
-              Toma el control <br/>
-              <span className="gradient-text">absoluto</span> de tu <br/>
-              inventario
-            </h1>
-            
-            <p className="text-lg lg:text-xl text-gray-400 max-w-lg leading-relaxed">
-              El sistema ágil e intuitivo en la nube para empresas modernas. Optimiza tus existencias, prevén quiebres de stock y toma decisiones basadas en datos al instante.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button 
-                onClick={onEnterApp}
-                className="px-8 py-4 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5"
-              >
-                Comenzar Gratis
-              </button>
-              <button className="px-8 py-4 rounded-xl text-base font-semibold text-white glass glass-hover transition-all flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Ver Demo
-              </button>
-            </div>
-          </div>
-
-          {/* UI Mockup */}
-          <div className={`relative ${heroIntersecting ? 'animate-slideUpAndFade' : 'opacity-0'} delay-150`}>
-            <div className="relative rounded-2xl glass border border-white/10 p-2 shadow-2xl bg-gray-900/50">
-              {/* Window controls */}
-              <div className="flex gap-2 px-3 py-2 border-b border-white/5 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-              </div>
-              
-              {/* Mockup Content */}
-              <div className="p-4 space-y-4">
-                {/* Top Metrics */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="glass rounded-xl p-4 border border-white/5">
-                    <p className="text-gray-400 text-xs mb-1">Valor de Inventario</p>
-                    <p className="text-2xl font-bold text-white">$124,500</p>
-                    <div className="mt-2 text-xs text-emerald-400 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
-                      12.5% este mes
-                    </div>
-                  </div>
-                  <div className="glass rounded-xl p-4 border border-white/5">
-                    <p className="text-gray-400 text-xs mb-1">Alertas de Stock</p>
-                    <p className="text-2xl font-bold text-white">3 Críticas</p>
-                    <div className="mt-2 text-xs text-rose-400 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                      Requiere atención
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mockup Chart Area */}
-                <div className="glass rounded-xl p-4 border border-white/5 h-32 flex items-end justify-between gap-2 px-6">
-                  {[40, 70, 45, 90, 65, 85, 120].map((h, i) => (
-                    <div key={i} className="w-full bg-gradient-to-t from-indigo-500/20 to-purple-500/50 rounded-t-sm" style={{ height: `${(h/120)*100}%` }}></div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section id="caracteristicas" className="py-24 relative">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold">Todo lo que necesitas para tu inventario</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">Módulos especializados diseñados para darte visibilidad y control total sobre tus operaciones diarias.</p>
-          </div>
-
-          <div 
-            ref={featuresRef}
-            className={`grid md:grid-cols-3 gap-6 ${featuresIntersecting ? 'animate-slideUpAndFade' : 'opacity-0'}`}
-          >
-            {/* Feature 1 */}
-            <div className="glass glass-hover rounded-2xl p-8 border border-white/5 space-y-6">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-6">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white">Dashboard Analítico</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Visualización instantánea del valor total de existencias, alertas tempranas de niveles críticos y analíticas simplificadas para decisiones rápidas.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="glass glass-hover rounded-2xl p-8 border border-white/5 space-y-6">
-              <div className="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-6">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white">Gestión de Inventario Inteligente</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Tablas e interfaces ágiles para administrar productos con SKU, precios, y niveles exactos de stock sin complicaciones.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="glass glass-hover rounded-2xl p-8 border border-white/5 space-y-6">
-              <div className="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center mb-6">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white">Organización por Categorías</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                Clasificación estructural eficiente para segmentar tu mercancía, agilizar búsquedas y mantener tu catálogo impecable.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section id="tecnologia" className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-indigo-950/10 to-gray-950"></div>
-        <div 
-          ref={techRef}
-          className={`max-w-4xl mx-auto px-6 relative z-10 text-center ${techIntersecting ? 'animate-slideUpAndFade' : 'opacity-0'}`}
+      <main>
+        {/* 1. Hero Section */}
+        <section
+          id="inicio"
+          className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 overflow-hidden"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 mb-8">
-            <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            <span className="text-sm font-medium">Tecnología de Punta</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Infraestructura robusta en la nube</h2>
-          <p className="text-gray-400 text-lg mb-12">
-            Respaldado por la potencia de <strong>Firebase</strong> y <strong>Firestore</strong>, garantizamos sincronización instantánea, alta disponibilidad del 99.9% y protección de datos de grado empresarial para tu negocio.
-          </p>
-          
-          <div className="flex justify-center gap-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-            {/* Firebase Logo SVG mockup */}
-            <div className="flex flex-col items-center gap-2">
-              <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4.156 11.233L2.33 5.485c-.208-.65.55-1.183 1.1-.736l3.78 3.09L9.62 1.34c.18-.545.955-.545 1.135 0l2.365 7.158 5.666-5.465c.47-.453 1.25-.138 1.28.513l.872 17.653-8.082 4.542c-.524.294-1.162.294-1.686 0L4.156 11.233z" fill="#FFA000"/>
-                <path d="M12.001 24.81l8.08-4.54-7.55-7.4-4.88 4.67 4.35 7.27z" fill="#F57C00"/>
-                <path d="M20.938 20.27L20.066 2.618c-.03-.65-.81-.966-1.28-.513l-10.74 10.36 12.89 7.805z" fill="#FFCA28"/>
-              </svg>
-              <span className="text-xs font-semibold">Firebase</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-               <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none">
-                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#4285F4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-               </svg>
-              <span className="text-xs font-semibold">Firestore</span>
-            </div>
-          </div>
-        </div>
-      </section>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Footer & CTA */}
-      <footer className="relative border-t border-white/5 pt-20 pb-10 overflow-hidden">
-        {/* Glow CTA */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-purple-500/10 blur-[100px] pointer-events-none"></div>
+          <div className="max-w-7xl mx-auto text-center relative z-10">
+            <FadeIn delay="delay-100">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-8">
+                Inventario sin estrés para empresas que crecen
+                <br className="hidden md:block" />
+              </h1>
+            </FadeIn>
+
+            <FadeIn delay="delay-200">
+              <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Olvídate de las hojas de cálculo desactualizadas. Control Stock
+                te da visibilidad total de tu inventario, alertas automáticas y
+                reportes al instante.
+              </p>
+            </FadeIn>
+
+            <FadeIn delay="delay-300">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={onEnterApp}
+                  className="px-9 py-4 rounded-xl text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-1"
+                >
+                  Probar Aquí
+                </button>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay="delay-500" className="mt-20">
+              <div className="relative rounded-2xl md:rounded-[2rem] bg-slate-900 border border-white/10 p-2 md:p-4 shadow-2xl max-w-5xl mx-auto">
+                <div className="flex gap-2 px-4 py-3 border-b border-white/5 mb-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <img
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+                  alt="Dashboard Preview"
+                  className="w-full rounded-xl opacity-90"
+                />
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        <section className="py-12 bg-gradient-to-r from-indigo-500 to-purple-600">
+          <div className="max-w-7xl mx-auto px-6 text-center">
+            <p className="text-sm font-semibold text-white/80 uppercase tracking-widest mb-8">
+              500+ negocios confían en nosotros
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 text-white/70">
+              <span className="text-2xl font-bold">TechStore</span>
+              <span className="text-2xl font-serif italic">Boutique</span>
+              <span className="text-2xl font-black">MegaMart</span>
+              <span className="text-2xl font-mono">SUPPLY.CO</span>
+              <span className="text-2xl font-bold tracking-widest">GLOBAL</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="solucion" className="py-24 px-6 max-w-7xl mx-auto">
+          <FadeIn>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-6">
+                El fin del caos en tu almacén
+              </h2>
+              <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+                Diseñado para ser intuitivo desde el primer día, potente para
+                siempre.
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <FadeIn delay="delay-100">
+              <div className="bg-red-950/20 border border-red-500/20 rounded-3xl p-8 lg:p-12 h-full">
+                <h3 className="text-2xl font-bold text-red-400 mb-6 flex items-center gap-3">
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  La forma antigua
+                </h3>
+                <ul className="space-y-4 text-slate-300">
+                  <li className="flex items-start gap-3">
+                    <span className="text-red-500 mt-1">✗</span> Hojas de
+                    cálculo pesadas y propensas a errores.
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-red-500 mt-1">✗</span> Quiebres de
+                    stock por falta de alertas.
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-red-500 mt-1">✗</span> Datos
+                    desincronizados entre el equipo.
+                  </li>
+                </ul>
+              </div>
+            </FadeIn>
+            <FadeIn delay="delay-200">
+              <div className="bg-indigo-900/20 border border-indigo-500/20 rounded-3xl p-8 lg:p-12 h-full relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full" />
+                <h3 className="text-2xl font-bold text-indigo-400 mb-6 flex items-center gap-3 relative z-10">
+                  <svg
+                    className="w-8 h-8"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  Con Control Stock
+                </h3>
+                <ul className="space-y-4 text-slate-300 relative z-10">
+                  <li className="flex items-start gap-3">
+                    <span className="text-indigo-400 mt-1">✓</span>{" "}
+                    Actualizaciones en tiempo real.
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-indigo-400 mt-1">✓</span> Alertas
+                    automáticas inteligentes.
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-indigo-400 mt-1">✓</span> Tu equipo
+                    siempre en la misma página.
+                  </li>
+                </ul>
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* TODO PARTE DE PARA OPERAR SIN FRICCION */}
+        <section id="caracteristicas" className="py-24 bg-slate-900/30">
+          <div className="max-w-7xl mx-auto px-6">
+            <FadeIn>
+              <h2 className="text-3xl md:text-5xl font-bold text-center mb-16">
+                Todo para operar sin fricción
+              </h2>
+            </FadeIn>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  title: "Gestión Ágil",
+                  desc: "Agrega, edita y categoriza productos en segundos. Interfaz optimizada para máxima velocidad.",
+                  icon: (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    />
+                  ),
+                },
+                {
+                  title: "Métricas al Instante",
+                  desc: "Dashboard analítico que calcula el valor total de tu inventario y muestra tendencias de movimiento.",
+                  icon: (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  ),
+                },
+                {
+                  title: "Actualización en tiempo real",
+                  desc: "Nuestra arquitectura asegura que si un cajero descuenta un stock, tú lo ves reflejado en milisegundos.",
+                  icon: (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  ),
+                },
+              ].map((feature, i) => (
+                <FadeIn key={i} delay={`delay-${i * 100}`}>
+                  <div className="bg-slate-900 border border-white/5 rounded-2xl p-8 hover:bg-slate-800/80 transition-colors h-full">
+                    <div className="w-15 h-16 rounded-full  bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-6">
+                      <svg
+                        className="w-7 h-7"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        {feature.icon}
+                      </svg>
+                    </div>
+                    <h3 className="text-xl text-center font-bold mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-center text-slate-400 leading-relaxed">
+                      {feature.desc}
+                    </p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 px-6 max-w-7xl mx-auto text-center">
+          <FadeIn>
+            <h2 className="text-3xl md:text-5xl font-bold mb-16">
+              Tres pasos para el control total
+            </h2>
+          </FadeIn>
+          <div className="grid md:grid-cols-3 gap-12 relative">
+            <div className="hidden md:block absolute top-12 left-[16.6%] right-[16.6%] h-0.5 bg-gradient-to-r from-indigo-500/50 to-purple-500/50" />
+            {[
+              {
+                step: "1",
+                title: "Importa tus datos",
+                desc: "Sube tu catálogo actual o agrégalo fácilmente desde la interfaz intuitiva.",
+              },
+              {
+                step: "2",
+                title: "Ajusta Alertas",
+                desc: "Define niveles mínimos para cada producto y deja que el sistema vigile por ti.",
+              },
+              {
+                step: "3",
+                title: "Toma Decisiones",
+                desc: "Usa los reportes visuales para comprar inteligentemente y maximizar ganancias.",
+              },
+            ].map((item, i) => (
+              <FadeIn
+                key={i}
+                delay={`delay-${i * 100}`}
+                className="relative z-10"
+              >
+                <div className="w-24 h-24 mx-auto bg-slate-950 border-4 border-indigo-500 rounded-full flex items-center justify-center text-3xl font-black text-indigo-400 mb-6 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+                  {item.step}
+                </div>
+                <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                <p className="text-slate-400">{item.desc}</p>
+              </FadeIn>
+            ))}
+          </div>
+        </section>
+
+        {/* Separador de color */}
+        <div className="h-2 w-full bg-gradient-to-r from-indigo-500 to-purple-600" />
         
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10 mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">¿Listo para optimizar tu negocio?</h2>
-          <p className="text-xl text-gray-400 mb-8">Únete a miles de empresas que ya gestionan su inventario de manera inteligente.</p>
-          <button 
-            onClick={onEnterApp}
-            className="px-8 py-4 rounded-xl text-base font-bold text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transform hover:-translate-y-1"
-          >
-            Regístrate hoy — Es Gratis
-          </button>
-        </div>
+        {/* Sección: Métricas Clave */}
+        <section id="metricas" className="py-24 px-6 bg-slate-950 border-b border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <FadeIn>
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                  Resultados que hablan por sí solos
+                </h2>
+                <p className="text-slate-400 text-lg max-w-xl mx-auto">
+                  Empresas de todos los tamaños confían en Control Stock para mantener su inventario bajo control.
+                </p>
+              </div>
+            </FadeIn>
 
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 text-sm text-gray-500">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center">
-              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { value: "500+", label: "Empresas activas", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "indigo" },
+                { value: "99.9%", label: "Uptime garantizado", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", color: "emerald" },
+                { value: "2M+", label: "Productos gestionados", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "purple" },
+                { value: "3 min", label: "Tiempo de configuración", icon: "M13 10V3L4 14h7v7l9-11h-7z", color: "amber" },
+              ].map((stat, i) => (
+                <FadeIn key={i} delay={`delay-${i * 100}`}>
+                  <div className="relative group bg-slate-900 border border-white/5 rounded-2xl p-8 text-center hover:border-indigo-500/30 transition-all duration-300 overflow-hidden">
+                    <div className={`absolute inset-0 bg-${stat.color}-500/5 opacity-0 group-hover:opacity-100 transition-opacity`} />
+                    <div className={`w-12 h-12 mx-auto rounded-xl bg-${stat.color}-500/10 flex items-center justify-center mb-5`}>
+                      <svg className={`w-6 h-6 text-${stat.color}-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={stat.icon} />
+                      </svg>
+                    </div>
+                    <p className={`text-4xl font-extrabold text-${stat.color}-400 mb-2`}>{stat.value}</p>
+                    <p className="text-sm text-slate-400 font-medium">{stat.label}</p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+
+            {/* Barra de progreso visual */}
+            <FadeIn delay="delay-400">
+              <div className="mt-16 grid md:grid-cols-3 gap-8">
+                {[
+                  { label: "Reducción de errores de stock", pct: 94 },
+                  { label: "Ahorro de tiempo operativo", pct: 78 },
+                  { label: "Satisfacción del cliente", pct: 97 },
+                ].map((bar, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-sm font-medium text-slate-300">{bar.label}</span>
+                      <span className="text-sm font-bold text-indigo-400">{bar.pct}%</span>
+                    </div>
+                    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
+                        style={{ width: `${bar.pct}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+        </section>
+
+        {/* Lo que dicen nuestros clientes */}
+        
+        <section id="testimonios" className="py-24 bg-slate-900/30">
+          <div className="max-w-7xl mx-auto px-6">
+            <FadeIn>
+              <h2 className="text-3xl md:text-5xl font-bold text-center mb-16">
+                Lo que dicen nuestros clientes
+              </h2>
+            </FadeIn>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  name: "Laura Gómez",
+                  role: "Gerente de Retail",
+                  text: "Pasamos de perder ventas por falta de stock a tener un inventario optimizado. La interfaz es increíblemente rápida.",
+                },
+                {
+                  name: "Carlos Ruiz",
+                  role: "Dueño de Ferretería",
+                  text: "Manejar miles de SKUs era una pesadilla. Control Stock nos simplificó la vida y el dashboard es muy claro.",
+                },
+                {
+                  name: "Ana Martínez",
+                  role: "Directora de Operaciones",
+                  text: "La sincronización en tiempo real nos permite tener 3 sucursales conectadas sin errores de inventario.",
+                },
+              ].map((testi, i) => (
+                <FadeIn key={i} delay={`delay-${i * 100}`}>
+                  <div className="bg-slate-950 border border-white/5 rounded-2xl p-8 relative">
+                    <svg
+                      className="absolute top-6 right-6 w-8 h-8 text-indigo-500/20"
+                      fill="currentColor"
+                      viewBox="0 0 32 32"
+                    >
+                      <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H8c0-1.1.9-2 2-2V8zm18 0c-3.3 0-6 2.7-6 6v10h10V14h-6c0-1.1.9-2 2-2V8z" />
+                    </svg>
+                    <p className="text-slate-300 italic mb-6 relative z-10">
+                      "{testi.text}"
+                    </p>
+                    <div>
+                      <h4 className="font-bold text-white">{testi.name}</h4>
+                      <p className="text-sm text-slate-500">{testi.role}</p>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Newsletter */}
+        <section id="newsletter" className="py-32 px-6">
+          <FadeIn>
+            <div className="max-w-6xl mx-auto rounded-[3rem] bg-gradient-to-br from-indigo-900 to-slate-900 border border-indigo-500/30 p-8 md:p-16 relative overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/20 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/20 blur-[100px] rounded-full -translate-x-1/2 translate-y-1/2" />
+
+              <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                {/* Columna Izquierda: CTA original */}
+                <div className="text-center lg:text-left">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 border border-white/10 shadow-xl mb-8 backdrop-blur-sm">
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                    Listo para modernizar tu negocio?
+                  </h2>
+                  <p className="text-xl text-indigo-200 mb-10 max-w-lg mx-auto lg:mx-0">
+                    Únete a la plataforma que está cambiando la forma en que los
+                    negocios controlan sus productos.
+                  </p>
+                  <button
+                    onClick={onEnterApp}
+                    className="px-10 py-5 rounded-full bg-white text-indigo-950 font-bold text-lg hover:bg-slate-200 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-105"
+                  >
+                    Crear cuenta gratis ahora
+                  </button>
+                </div>
+
+                {/* Columna Derecha: Newsletter Form */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 sm:p-10 shadow-2xl relative">
+                  <h3 className="text-2xl font-bold mb-3 text-white">
+                    Únete a nuestro boletín
+                  </h3>
+                  <p className="text-indigo-200/80 mb-8 text-sm leading-relaxed">
+                    Recibe consejos de inventario, actualizaciones exclusivas y
+                    estrategias de crecimiento directamente en tu correo.
+                  </p>
+
+                  <form
+                    className="space-y-5"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      alert("¡Gracias por suscribirte al newsletter!");
+                    }}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-xs font-medium text-indigo-200/70 mb-2 ml-1">
+                          Nombre
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ej. Carlos"
+                          className="w-full bg-black/20 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder:text-white/20 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-indigo-200/70 mb-2 ml-1">
+                          Apellido
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ej. Mendoza"
+                          className="w-full bg-black/20 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder:text-white/20 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-indigo-200/70 mb-2 ml-1">
+                        Correo Electrónico
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="tu@empresa.com"
+                        className="w-full bg-black/20 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition-all placeholder:text-white/20 text-sm"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-4 mt-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2"
+                    >
+                      <span>Suscribirme ahora</span>
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
+                      </svg>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-r from-indigo-500 to-purple-600 pt-16 pb-8 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-indigo-950 flex items-center justify-center shadow-inner">
+              <svg
+                className="w-4 h-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
               </svg>
             </div>
-            <span className="font-semibold text-gray-300">Control Stock</span>
-            <span className="ml-2">© 2026. Todos los derechos reservados.</span>
+            <span className="font-bold text-xl text-white">Control Stock</span>
           </div>
-          
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacidad</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Términos</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Contacto</a>
+
+          <div className="flex gap-8 text-sm font-medium text-white/80">
+            <a href="#" className="hover:text-white transition-colors">
+              Privacidad
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Términos
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Soporte
+            </a>
           </div>
+
+          <p className="text-white/60 text-sm">© 2026 Control Stock Inc.</p>
         </div>
       </footer>
     </div>

@@ -13,7 +13,7 @@ import { useUI } from "./hooks/useUI";
 const App = () => {
   const [authView, setAuthView] = useState("landing"); // 'landing', 'login', 'register'
   const { isAuthenticated } = useSelector((state) => state.auth);
-  
+
   const { loadProducts, isLoading: productsLoading } = useProducts();
   const { loadCategories, isLoading: categoriesLoading } = useCategories();
   const { loadSuppliers, isLoading: suppliersLoading } = useSuppliers();
@@ -36,14 +36,23 @@ const App = () => {
 
   if (!isAuthenticated) {
     if (authView === "login") {
-      return <LoginPage onNavigateToRegister={() => setAuthView("register")} />;
+      return (
+        <LoginPage
+          onNavigateToRegister={() => setAuthView("register")}
+          onNavigateToLanding={() => setAuthView("landing")}
+        />
+      );
     }
     if (authView === "register") {
-      return <RegisterPage onNavigateToLogin={() => setAuthView("login")} />;
+      return (
+        <RegisterPage
+          onNavigateToLogin={() => setAuthView("login")}
+          onNavigateToLanding={() => setAuthView("landing")}
+        />
+      );
     }
     return <LandingPage onEnterApp={() => setAuthView("login")} />;
   }
-
 
   if (isLoading) {
     return (
