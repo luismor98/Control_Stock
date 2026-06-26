@@ -1,12 +1,25 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser, clearError } from "../../store/slices/authSlice";
+import { useAuth } from "../../hooks/useAuth";
 
+/**
+ * RegisterPage — Componente de Registro de Usuario.
+ *
+ * ¿Qué cambió con el refactor?
+ * ANTES: Importaba useDispatch, useSelector, registerUser y clearError
+ *        de Redux directamente. Mezclaba lógica de negocio con UI.
+ *
+ * AHORA: Usa el hook useAuth que encapsula toda esa lógica.
+ *        Este componente mantiene solo el estado LOCAL del formulario
+ *        (formData, passwordError) porque eso es exclusivo de la UI
+ *        y no necesita estar en el estado global.
+ *
+ * Regla de oro: ¿Este estado necesita ser leído por otro componente
+ * en otra parte del árbol? Si NO → useState local.
+ *                              Si SÍ → Redux global.
+ */
 const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector(
-    (state) => state.auth || { isLoading: false, error: null },
-  );
+  // ✅ Reemplaza: useDispatch + useSelector + dispatch(clearError()) en useEffect
+  const { register, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -17,19 +30,9 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
 
   const [passwordError, setPasswordError] = useState("");
 
-  // Limpiar errores cuando el componente se desmonta
-  useEffect(() => {
-    return () => {
-      dispatch(clearError());
-    };
-  }, [dispatch]);
-
   // Validar si las contraseñas coinciden en tiempo real
   useEffect(() => {
-    if (
-      formData.confirmPassword &&
-      formData.password !== formData.confirmPassword
-    ) {
+    if (formData.confirmPassword && formData.password !== formData.confirmPassword) {
       setPasswordError("Las contraseñas no coinciden");
     } else {
       setPasswordError("");
@@ -53,15 +56,16 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-
-    dispatch(registerUser(formData));
+    // ✅ Solo llamamos a register(); el hook gestiona dispatch,
+    //    .unwrap(), el toast de éxito/error y la navegación post-registro.
+    await register(formData);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30 py-12 relative">
-      
+
       {/* Botón de volver al inicio */}
-      <button 
+      <button
         onClick={onNavigateToLanding}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
@@ -73,7 +77,7 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
         <span className="text-sm font-semibold hidden sm:block">Volver al inicio</span>
       </button>
 
-      {/* Background glow para darle el mismo estilo de la marca */}
+      {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10 animate-slideUpAndFade">
@@ -107,6 +111,7 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           onSubmit={handleSubmit}
           className="glass rounded-2xl p-8 border border-white/10 shadow-2xl space-y-5"
         >
+          {/* Error proveniente del hook useAuth (que lo lee del store de Redux) */}
           {error && (
             <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3 rounded-lg text-center">
               {error}
@@ -114,10 +119,11 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label htmlFor="register-name" className="block text-sm font-medium text-gray-300 mb-1.5">
               Nombre Completo
             </label>
             <input
+              id="register-name"
               type="text"
               name="name"
               required
@@ -129,10 +135,11 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label htmlFor="register-email" className="block text-sm font-medium text-gray-300 mb-1.5">
               Correo Electrónico
             </label>
             <input
+              id="register-email"
               type="email"
               name="email"
               required
@@ -144,10 +151,11 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label htmlFor="register-password" className="block text-sm font-medium text-gray-300 mb-1.5">
               Contraseña
             </label>
             <input
+              id="register-password"
               type="password"
               name="password"
               required
@@ -159,10 +167,11 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label htmlFor="register-confirm-password" className="block text-sm font-medium text-gray-300 mb-1.5">
               Confirmar Contraseña
             </label>
             <input
+              id="register-confirm-password"
               type="password"
               name="confirmPassword"
               required
@@ -183,6 +192,7 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <button
+            id="register-submit-btn"
             type="submit"
             disabled={isLoading || !isFormValid}
             className={`w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white shadow-lg transition-all mt-2 ${

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // Tu configuración web de Firebase desde variables de entorno
 const firebaseConfig = {
@@ -14,5 +15,6 @@ const firebaseConfig = {
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializar y exportar Cloud Firestore
+// Inicializar y exportar Cloud Firestore y Auth
 export const db = getFirestore(app);
+export const auth = getAuth(app);

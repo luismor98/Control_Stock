@@ -1,24 +1,29 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, clearError } from "../../store/slices/authSlice";
+import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
+/**
+ * LoginPage — Componente de Inicio de Sesión.
+ *
+ * ¿Qué cambió con el refactor?
+ * ANTES: Este componente importaba useDispatch, useSelector y las
+ *        acciones de Redux directamente. Era el responsable de toda
+ *        la lógica de autenticación Y de pintar la UI.
+ *
+ * AHORA: Este componente SOLO se encarga de pintar la UI y recoger
+ *        los datos del formulario. Toda la lógica vive en useAuth.
+ *        Esto se llama "Thin Component" (Componente Delgado).
+ *
+ * Beneficio: Si mañana cambiamos de Redux a Zustand o a Firebase Auth,
+ * solo tocamos useAuth.js, no este archivo.
+ */
 const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
-  const dispatch = useDispatch();
-  const { isLoading, error } = useSelector(
-    (state) => state.auth || { isLoading: false, error: null },
-  );
+  // ✅ Una sola línea reemplaza: useDispatch, useSelector, clearError
+  const { login, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  // Limpiar errores cuando el componente se desmonta
-  useEffect(() => {
-    return () => {
-      dispatch(clearError());
-    };
-  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,14 +34,16 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser(formData));
+    // ✅ Solo llamamos a login(); el hook se encarga del resto
+    // (dispatch, .unwrap(), toast, limpieza de error).
+    await login(formData);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30">
-      
+
       {/* Botón de volver al inicio */}
-      <button 
+      <button
         onClick={onNavigateToLanding}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
@@ -80,6 +87,7 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
           onSubmit={handleSubmit}
           className="glass rounded-2xl p-8 border border-white/10 shadow-2xl space-y-6"
         >
+          {/* El error ahora viene del hook, no de useSelector directo */}
           {error && (
             <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3 rounded-lg text-center">
               {error}
@@ -88,12 +96,13 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
 
           <div>
             <label
-              test-id="email-label"
+              htmlFor="login-email"
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Correo Electrónico
             </label>
             <input
+              id="login-email"
               type="email"
               name="email"
               required
@@ -115,6 +124,7 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
               </a>
             </label>
             <input
+              id="login-password"
               type="password"
               name="password"
               required
@@ -126,6 +136,7 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
           </div>
 
           <button
+            id="login-submit-btn"
             type="submit"
             disabled={isLoading}
             className={`w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white shadow-lg transition-all ${
