@@ -27,3 +27,6 @@ dist-ssr
 *.sw?
 
 .agent/
+
+*-firebase-adminsdk-*.json
+service-account.json

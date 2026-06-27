@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as firestoreService from '../../services/firestoreService';
+import * as firestoreService from '../../services/apiService';
 
 const UNCATEGORIZED = {
   id: 0,
