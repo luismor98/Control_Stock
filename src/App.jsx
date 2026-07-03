@@ -59,80 +59,85 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
-  if (isInitializing) {
-    return (
-      <div className="h-screen bg-gray-950 flex flex-col items-center justify-center gap-4 transition-colors duration-300">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30 animate-pulse">
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-          </svg>
-        </div>
-        <p className="text-gray-400 text-sm font-semibold animate-pulse">Conectando...</p>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    if (authView === "login") {
+  // Función auxiliar para renderizar el contenido principal según el estado
+  const renderContent = () => {
+    if (isInitializing) {
       return (
-        <LoginPage
-          onNavigateToRegister={() => setAuthView("register")}
-          onNavigateToLanding={() => setAuthView("landing")}
-        />
+        <div className="h-screen bg-gray-950 flex flex-col items-center justify-center gap-4 transition-colors duration-300">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30 animate-pulse">
+            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            </svg>
+          </div>
+          <p className="text-gray-400 text-sm font-semibold animate-pulse">Conectando...</p>
+        </div>
       );
     }
-    if (authView === "register") {
+
+    if (!isAuthenticated) {
+      if (authView === "login") {
+        return (
+          <LoginPage
+            onNavigateToRegister={() => setAuthView("register")}
+            onNavigateToLanding={() => setAuthView("landing")}
+          />
+        );
+      }
+      if (authView === "register") {
+        return (
+          <RegisterPage
+            onNavigateToLogin={() => setAuthView("login")}
+            onNavigateToLanding={() => setAuthView("landing")}
+          />
+        );
+      }
+      return <LandingPage onEnterApp={() => setAuthView("login")} />;
+    }
+
+    if (isLoading) {
       return (
-        <RegisterPage
-          onNavigateToLogin={() => setAuthView("login")}
-          onNavigateToLanding={() => setAuthView("landing")}
-        />
+        <div className="h-screen bg-gray-100 dark:bg-gray-950 flex flex-col items-center justify-center gap-4 transition-colors duration-300">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30 animate-pulse">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            </svg>
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              Control Stock
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-600 mt-1">
+              Cargando inventario...
+            </p>
+          </div>
+          <div className="flex gap-1.5">
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
+          </div>
+        </div>
       );
     }
-    return <LandingPage onEnterApp={() => setAuthView("login")} />;
-  }
 
-  if (isLoading) {
-    return (
-      <div className="h-screen bg-gray-100 dark:bg-gray-950 flex flex-col items-center justify-center gap-4 transition-colors duration-300">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30 animate-pulse">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6 text-white"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-          >
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-          </svg>
-        </div>
-        <div className="text-center">
-          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            Control Stock
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-600 mt-1">
-            Cargando inventario...
-          </p>
-        </div>
-        <div className="flex gap-1.5">
-          {[0, 1, 2].map((i) => (
-            <span
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
+    return <MainLayout />;
+  };
 
   return (
     <>
-      {/* Ya no pasamos todas las props hacia abajo; MainLayout consumirá lo que necesite del Store/Hooks */}
-      <MainLayout />
+      {renderContent()}
 
+      {/* El Toast ahora siempre está en el DOM, independientemente de la vista */}
       <Toast
         show={toast.show}
         message={toast.message}

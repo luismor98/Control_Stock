@@ -1,34 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-
-const useIntersectionObserver = (options = {}) => {
-  const [isIntersecting, setIsIntersecting] = useState(false);
-  const targetRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsIntersecting(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1, ...options },
-    );
-
-    const currentRef = targetRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [options]);
-
-  return [targetRef, isIntersecting];
-};
+import { useRef } from "react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import { useUI } from "../hooks/useUI";
 
 const FadeIn = ({ children, delay = "", className = "" }) => {
   const [ref, isVisible] = useIntersectionObserver();
@@ -43,6 +15,8 @@ const FadeIn = ({ children, delay = "", className = "" }) => {
 };
 
 const LandingPage = ({ onEnterApp }) => {
+  const { triggerToast } = useUI();
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 font-sans antialiased selection:bg-indigo-500/30 overflow-x-hidden">
       {/* Navbar */}
@@ -82,10 +56,7 @@ const LandingPage = ({ onEnterApp }) => {
             >
               Características
             </a>
-            <a
-              href="#metricas"
-              className="hover:text-white transition-colors"
-            >
+            <a href="#metricas" className="hover:text-white transition-colors">
               Resultados
             </a>
             <a
@@ -154,7 +125,8 @@ const LandingPage = ({ onEnterApp }) => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <img
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+                  src="./src/assets/img/Ejemplo.png"
+                  //src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
                   alt="Dashboard Preview"
                   className="w-full rounded-xl opacity-90"
                 />
@@ -378,9 +350,12 @@ const LandingPage = ({ onEnterApp }) => {
 
         {/* Separador de color */}
         <div className="h-2 w-full bg-gradient-to-r from-indigo-500 to-purple-600" />
-        
+
         {/* Sección: Métricas Clave */}
-        <section id="metricas" className="py-24 px-6 bg-slate-950 border-b border-white/5">
+        <section
+          id="metricas"
+          className="py-24 px-6 bg-slate-950 border-b border-white/5"
+        >
           <div className="max-w-7xl mx-auto">
             <FadeIn>
               <div className="text-center mb-16">
@@ -388,28 +363,69 @@ const LandingPage = ({ onEnterApp }) => {
                   Resultados que hablan por sí solos
                 </h2>
                 <p className="text-slate-400 text-lg max-w-xl mx-auto">
-                  Empresas de todos los tamaños confían en Control Stock para mantener su inventario bajo control.
+                  Empresas de todos los tamaños confían en Control Stock para
+                  mantener su inventario bajo control.
                 </p>
               </div>
             </FadeIn>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { value: "500+", label: "Empresas activas", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", color: "indigo" },
-                { value: "99.9%", label: "Uptime garantizado", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", color: "emerald" },
-                { value: "2M+", label: "Productos gestionados", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "purple" },
-                { value: "3 min", label: "Tiempo de configuración", icon: "M13 10V3L4 14h7v7l9-11h-7z", color: "amber" },
+                {
+                  value: "500+",
+                  label: "Empresas activas",
+                  icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+                  color: "indigo",
+                },
+                {
+                  value: "99.9%",
+                  label: "Uptime garantizado",
+                  icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+                  color: "emerald",
+                },
+                {
+                  value: "2M+",
+                  label: "Productos gestionados",
+                  icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
+                  color: "purple",
+                },
+                {
+                  value: "3 min",
+                  label: "Tiempo de configuración",
+                  icon: "M13 10V3L4 14h7v7l9-11h-7z",
+                  color: "amber",
+                },
               ].map((stat, i) => (
                 <FadeIn key={i} delay={`delay-${i * 100}`}>
                   <div className="relative group bg-slate-900 border border-white/5 rounded-2xl p-8 text-center hover:border-indigo-500/30 transition-all duration-300 overflow-hidden">
-                    <div className={`absolute inset-0 bg-${stat.color}-500/5 opacity-0 group-hover:opacity-100 transition-opacity`} />
-                    <div className={`w-12 h-12 mx-auto rounded-xl bg-${stat.color}-500/10 flex items-center justify-center mb-5`}>
-                      <svg className={`w-6 h-6 text-${stat.color}-400`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={stat.icon} />
+                    <div
+                      className={`absolute inset-0 bg-${stat.color}-500/5 opacity-0 group-hover:opacity-100 transition-opacity`}
+                    />
+                    <div
+                      className={`w-12 h-12 mx-auto rounded-xl bg-${stat.color}-500/10 flex items-center justify-center mb-5`}
+                    >
+                      <svg
+                        className={`w-6 h-6 text-${stat.color}-400`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d={stat.icon}
+                        />
                       </svg>
                     </div>
-                    <p className={`text-4xl font-extrabold text-${stat.color}-400 mb-2`}>{stat.value}</p>
-                    <p className="text-sm text-slate-400 font-medium">{stat.label}</p>
+                    <p
+                      className={`text-4xl font-extrabold text-${stat.color}-400 mb-2`}
+                    >
+                      {stat.value}
+                    </p>
+                    <p className="text-sm text-slate-400 font-medium">
+                      {stat.label}
+                    </p>
                   </div>
                 </FadeIn>
               ))}
@@ -425,8 +441,12 @@ const LandingPage = ({ onEnterApp }) => {
                 ].map((bar, i) => (
                   <div key={i}>
                     <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm font-medium text-slate-300">{bar.label}</span>
-                      <span className="text-sm font-bold text-indigo-400">{bar.pct}%</span>
+                      <span className="text-sm font-medium text-slate-300">
+                        {bar.label}
+                      </span>
+                      <span className="text-sm font-bold text-indigo-400">
+                        {bar.pct}%
+                      </span>
                     </div>
                     <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                       <div
@@ -442,7 +462,7 @@ const LandingPage = ({ onEnterApp }) => {
         </section>
 
         {/* Lo que dicen nuestros clientes */}
-        
+
         <section id="testimonios" className="py-24 bg-slate-900/30">
           <div className="max-w-7xl mx-auto px-6">
             <FadeIn>
@@ -546,7 +566,11 @@ const LandingPage = ({ onEnterApp }) => {
                     className="space-y-5"
                     onSubmit={(e) => {
                       e.preventDefault();
-                      alert("¡Gracias por suscribirte al newsletter!");
+                      e.target.reset();
+                      triggerToast(
+                        "¡Gracias por suscribirte al newsletter! 📧",
+                        "success",
+                      );
                     }}
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

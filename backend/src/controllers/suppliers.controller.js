@@ -26,8 +26,8 @@ export const createSupplier = async (req, res) => {
   try {
     const supplierData = req.body;
 
-    if (!supplierData.name) {
-      return res.status(400).json({ error: 'El nombre del proveedor es requerido' });
+    if (!supplierData.razonSocial) {
+      return res.status(400).json({ error: 'La razón social del proveedor es requerida' });
     }
 
     const docRef = await db.collection(COLLECTION).add(supplierData);

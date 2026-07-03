@@ -235,7 +235,8 @@ const SupplierModal = ({ supplier, onClose, onSubmit }) => {
     const finalPrefix = phonePrefix === "otro" ? customPrefix : phonePrefix;
     let finalPhone = "";
 
-    if (finalPrefix || phoneNumber) {
+    // El teléfono es opcional: solo validamos si el usuario escribió algo en el número
+    if (phoneNumber) {
       if (finalPrefix.length !== 4) {
         setError("El código de teléfono debe tener 4 dígitos.");
         return;
