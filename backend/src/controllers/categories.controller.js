@@ -1,6 +1,6 @@
-import { db } from '../config/firebaseAdmin.js';
+import { db } from "../config/firebaseAdmin.js";
 
-const COLLECTION = 'categories';
+const COLLECTION = "categories";
 
 /**
  * GET /api/categories
@@ -9,11 +9,14 @@ const COLLECTION = 'categories';
 export const getCategories = async (req, res) => {
   try {
     const snapshot = await db.collection(COLLECTION).get();
-    const categories = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const categories = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     res.json(categories);
   } catch (error) {
-    console.error('Error al obtener categorías:', error);
-    res.status(500).json({ error: 'Error al obtener las categorías' });
+    console.error("Error al obtener categorías:", error);
+    res.status(500).json({ error: "Error al obtener las categorías" });
   }
 };
 
@@ -27,15 +30,19 @@ export const createCategory = async (req, res) => {
     const categoryData = req.body;
 
     if (!categoryData.name) {
-      return res.status(400).json({ error: 'El nombre de la categoría es requerido' });
+      return res
+        .status(400)
+        .json({ error: "El nombre de la categoría es requerido" });
     }
 
-    const docRef = await db.collection(COLLECTION).add({ ...categoryData, protected: false });
+    const docRef = await db
+      .collection(COLLECTION)
+      .add({ ...categoryData, protected: false });
     const newCategory = { id: docRef.id, ...categoryData, protected: false };
     res.status(201).json(newCategory);
   } catch (error) {
-    console.error('Error al crear categoría:', error);
-    res.status(500).json({ error: 'Error al crear la categoría' });
+    console.error("Error al crear categoría:", error);
+    res.status(500).json({ error: "Error al crear la categoría" });
   }
 };
 
@@ -53,14 +60,14 @@ export const updateCategory = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Categoría no encontrada' });
+      return res.status(404).json({ error: "Categoría no encontrada" });
     }
 
     await docRef.update(updatedData);
     res.json({ id, ...updatedData });
   } catch (error) {
-    console.error('Error al actualizar categoría:', error);
-    res.status(500).json({ error: 'Error al actualizar la categoría' });
+    console.error("Error al actualizar categoría:", error);
+    res.status(500).json({ error: "Error al actualizar la categoría" });
   }
 };
 
@@ -75,13 +82,13 @@ export const deleteCategory = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Categoría no encontrada' });
+      return res.status(404).json({ error: "Categoría no encontrada" });
     }
 
     await docRef.delete();
-    res.json({ id, message: 'Categoría eliminada correctamente' });
+    res.json({ id, message: "Categoría eliminada correctamente" });
   } catch (error) {
-    console.error('Error al eliminar categoría:', error);
-    res.status(500).json({ error: 'Error al eliminar la categoría' });
+    console.error("Error al eliminar categoría:", error);
+    res.status(500).json({ error: "Error al eliminar la categoría" });
   }
 };

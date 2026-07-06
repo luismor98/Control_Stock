@@ -47,7 +47,7 @@ export const useAuth = () => {
 
   // Consumimos useUI para poder navegar entre vistas y mostrar toasts,
   // sin que los componentes tengan que importar y usar useUI por separado.
-  const { triggerToast, setCurrentView } = useUI();
+  const { triggerToast } = useUI();
 
   // ----------------------------------------------------------------
   // login

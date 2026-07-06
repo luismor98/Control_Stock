@@ -11,6 +11,7 @@ import cors from 'cors';
 import productsRoutes from './routes/products.routes.js';
 import categoriesRoutes from './routes/categories.routes.js';
 import suppliersRoutes from './routes/suppliers.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -41,6 +42,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/products', productsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/suppliers', suppliersRoutes);
+app.use('/api/auth', authRoutes);
 
 // ─── Ruta no encontrada (404) ─────────────────────────────────────────────────
 

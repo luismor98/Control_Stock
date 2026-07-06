@@ -1,5 +1,8 @@
 import { useState } from "react";
 import StatCard from "../components/StatCard";
+import { useProducts } from "../hooks/useProducts";
+import { useUI } from "../hooks/useUI";
+import { STOCK_THRESHOLD } from "../constants/inventory";
 
 const icons = {
   box: (
@@ -79,8 +82,6 @@ const icons = {
     </svg>
   ),
 };
-
-const STOCK_THRESHOLD = 5;
 
 const CategoryBar = ({ label, count, total, color }) => {
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
@@ -326,8 +327,7 @@ const CategoryDonut = ({ products }) => {
   );
 };
 
-import { useProducts } from "../hooks/useProducts";
-import { useUI } from "../hooks/useUI";
+
 
 const DashboardPage = () => {
   const { products, stats } = useProducts();

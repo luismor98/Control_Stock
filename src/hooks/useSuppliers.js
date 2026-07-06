@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUI } from "./useUI";
 import {
@@ -18,11 +19,11 @@ export const useSuppliers = () => {
 
   const isLoading = status === "loading";
 
-  const loadSuppliers = () => {
+  const loadSuppliers = useCallback(() => {
     dispatch(fetchSuppliers());
-  };
+  }, [dispatch]);
 
-  const addSupplier = async (supplierData) => {
+  const addSupplier = useCallback(async (supplierData) => {
     try {
       await dispatch(addSupplierAsync(supplierData)).unwrap();
       triggerToast("Proveedor registrado exitosamente", "success");
@@ -32,9 +33,9 @@ export const useSuppliers = () => {
       triggerToast("Error al registrar proveedor", "error");
       return false;
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const updateSupplier = async (supplierData) => {
+  const updateSupplier = useCallback(async (supplierData) => {
     try {
       await dispatch(updateSupplierAsync(supplierData)).unwrap();
       triggerToast("Proveedor actualizado exitosamente", "info");
@@ -44,9 +45,9 @@ export const useSuppliers = () => {
       triggerToast("Error al actualizar proveedor", "error");
       return false;
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const deleteSupplier = async (id) => {
+  const deleteSupplier = useCallback(async (id) => {
     try {
       await dispatch(deleteSupplierAsync(id)).unwrap();
       triggerToast("Proveedor eliminado exitosamente", "error");
@@ -56,7 +57,7 @@ export const useSuppliers = () => {
       triggerToast("Error al eliminar proveedor", "error");
       return false;
     }
-  };
+  }, [dispatch, triggerToast]);
 
   return {
     suppliers,

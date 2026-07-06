@@ -103,3 +103,10 @@ export const deleteSupplier = async (id) => {
   await apiFetch(`/suppliers/${id}`, { method: "DELETE" });
   return id;
 };
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+
+export const syncUser = () =>
+  apiFetch("/auth/sync", {
+    method: "POST",
+  });

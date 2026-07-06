@@ -60,12 +60,13 @@ export const migrateProductsCategoryAsync = createAsyncThunk(
       const products = state.products.items;
       const productsToMigrate = products.filter(p => p.category === oldCategoryName);
       
-      const migratedProducts = [];
-      for (const p of productsToMigrate) {
+      const migratedPromises = productsToMigrate.map(async p => {
         const updatedProduct = { ...p, category: UNCATEGORIZED_NAME };
         await apiService.updateProduct(p.id, updatedProduct);
-        migratedProducts.push(updatedProduct);
-      }
+        return updatedProduct;
+      });
+      
+      const migratedProducts = await Promise.all(migratedPromises);
       return migratedProducts;
     } catch (error) {
       return rejectWithValue(error.message);

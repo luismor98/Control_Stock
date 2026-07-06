@@ -6,6 +6,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '../../config/firebase';
+import * as apiService from '../../services/apiService';
 
 const initialState = {
   user: null,
@@ -26,11 +27,14 @@ export const loginUser = createAsyncThunk(
       );
       
       const user = userCredential.user;
+      
+      const userData = await apiService.syncUser();
+
       return {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName,
-        rol: user.email === 'admin@controlstock.com' ? 'admin' : 'operador',
+        rol: userData.rol,
       };
     } catch (error) {
       let errorMessage = 'Error al iniciar sesión';
@@ -65,11 +69,13 @@ export const registerUser = createAsyncThunk(
         displayName: userData.name
       });
       
+      const serverUserData = await apiService.syncUser();
+
       return {
         uid: user.uid,
         email: user.email,
         displayName: userData.name,
-        rol: user.email === 'admin@controlstock.com' ? 'admin' : 'operador',
+        rol: serverUserData.rol,
       };
     } catch (error) {
       let errorMessage = 'Error al registrar el usuario';

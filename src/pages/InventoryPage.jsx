@@ -4,11 +4,13 @@ import ProductTable from "../components/ProductTable";
 
 import { useProducts } from "../hooks/useProducts";
 import { useCategories } from "../hooks/useCategories";
+import { useUI } from "../hooks/useUI";
 import { useSelector } from "react-redux";
 
 const InventoryPage = () => {
-  const { products, addProduct, updateProduct, deleteProduct } = useProducts();
+  const { products, stats, addProduct, updateProduct, deleteProduct } = useProducts();
   const { categories } = useCategories();
+  const { triggerToast } = useUI();
   const [editingProduct, setEditingProduct] = useState(null);
   
   const { user } = useSelector((state) => state.auth);
@@ -33,7 +35,7 @@ const InventoryPage = () => {
 
   const handleExportCSV = () => {
     if (!products || products.length === 0) {
-      alert("No hay productos para exportar");
+      triggerToast("No hay productos para exportar", "error");
       return;
     }
 
@@ -110,9 +112,7 @@ const InventoryPage = () => {
                 Total unidades
               </span>
               <span className="text-sm font-bold text-purple-600 dark:text-purple-300">
-                {products
-                  .reduce((sum, p) => sum + p.quantity, 0)
-                  .toLocaleString()}
+                {stats.totalUnits.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -120,10 +120,7 @@ const InventoryPage = () => {
                 Valor total
               </span>
               <span className="text-sm font-bold text-emerald-600 dark:text-emerald-300">
-                $
-                {products
-                  .reduce((sum, p) => sum + p.price * p.quantity, 0)
-                  .toFixed(2)}
+                ${stats.totalValue.toFixed(2)}
               </span>
             </div>
           </div>

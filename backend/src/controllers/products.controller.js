@@ -1,6 +1,6 @@
-import { db } from '../config/firebaseAdmin.js';
+import { db } from "../config/firebaseAdmin.js";
 
-const COLLECTION = 'products';
+const COLLECTION = "products";
 
 /**
  * GET /api/products
@@ -9,11 +9,14 @@ const COLLECTION = 'products';
 export const getProducts = async (req, res) => {
   try {
     const snapshot = await db.collection(COLLECTION).get();
-    const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const products = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     res.json(products);
   } catch (error) {
-    console.error('Error al obtener productos:', error);
-    res.status(500).json({ error: 'Error al obtener los productos' });
+    console.error("Error al obtener productos:", error);
+    res.status(500).json({ error: "Error al obtener los productos" });
   }
 };
 
@@ -27,15 +30,17 @@ export const createProduct = async (req, res) => {
     const productData = req.body;
 
     if (!productData.name) {
-      return res.status(400).json({ error: 'El nombre del producto es requerido' });
+      return res
+        .status(400)
+        .json({ error: "El nombre del producto es requerido" });
     }
 
     const docRef = await db.collection(COLLECTION).add(productData);
     const newProduct = { id: docRef.id, ...productData };
     res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Error al crear producto:', error);
-    res.status(500).json({ error: 'Error al crear el producto' });
+    console.error("Error al crear producto:", error);
+    res.status(500).json({ error: "Error al crear el producto" });
   }
 };
 
@@ -54,14 +59,14 @@ export const updateProduct = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
 
     await docRef.update(updatedData);
     res.json({ id, ...updatedData });
   } catch (error) {
-    console.error('Error al actualizar producto:', error);
-    res.status(500).json({ error: 'Error al actualizar el producto' });
+    console.error("Error al actualizar producto:", error);
+    res.status(500).json({ error: "Error al actualizar el producto" });
   }
 };
 
@@ -76,13 +81,13 @@ export const deleteProduct = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Producto no encontrado' });
+      return res.status(404).json({ error: "Producto no encontrado" });
     }
 
     await docRef.delete();
-    res.json({ id, message: 'Producto eliminado correctamente' });
+    res.json({ id, message: "Producto eliminado correctamente" });
   } catch (error) {
-    console.error('Error al eliminar producto:', error);
-    res.status(500).json({ error: 'Error al eliminar el producto' });
+    console.error("Error al eliminar producto:", error);
+    res.status(500).json({ error: "Error al eliminar el producto" });
   }
 };

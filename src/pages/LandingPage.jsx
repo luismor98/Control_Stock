@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { useUI } from "../hooks/useUI";
+import ejemploImg from "../assets/img/Ejemplo.png";
 
 const FadeIn = ({ children, delay = "", className = "" }) => {
   const [ref, isVisible] = useIntersectionObserver();
@@ -125,7 +126,7 @@ const LandingPage = ({ onEnterApp }) => {
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
                 <img
-                  src="./src/assets/img/Ejemplo.png"
+                  src={ejemploImg}
                   //src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
                   alt="Dashboard Preview"
                   className="w-full rounded-xl opacity-90"

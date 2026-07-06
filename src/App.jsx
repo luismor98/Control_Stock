@@ -13,6 +13,7 @@ import { useCategories } from "./hooks/useCategories";
 import { useSuppliers } from "./hooks/useSuppliers";
 import { useUI } from "./hooks/useUI";
 import { useAuth } from "./hooks/useAuth";
+import * as apiService from "./services/apiService";
 
 const App = () => {
   const [authView, setAuthView] = useState("landing"); // 'landing', 'login', 'register'
@@ -32,16 +33,24 @@ const App = () => {
 
   useEffect(() => {
     // Escuchar cambios en la autenticación de Firebase
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        dispatch(
-          setAuthState({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            rol: user.email === "admin@controlstock.com" ? "admin" : "operador",
-          }),
-        );
+        try {
+          // Sincronizamos con el backend para obtener o crear el perfil y rol
+          const userData = await apiService.syncUser();
+          
+          dispatch(
+            setAuthState({
+              uid: user.uid,
+              email: user.email,
+              displayName: user.displayName || userData.name,
+              rol: userData.rol,
+            }),
+          );
+        } catch (error) {
+          console.error("Error al sincronizar el usuario:", error);
+          dispatch(setAuthState(null)); // Fallback de seguridad
+        }
       } else {
         dispatch(setAuthState(null));
       }

@@ -1,6 +1,6 @@
-import { db } from '../config/firebaseAdmin.js';
+import { db } from "../config/firebaseAdmin.js";
 
-const COLLECTION = 'suppliers';
+const COLLECTION = "suppliers";
 
 /**
  * GET /api/suppliers
@@ -9,11 +9,14 @@ const COLLECTION = 'suppliers';
 export const getSuppliers = async (req, res) => {
   try {
     const snapshot = await db.collection(COLLECTION).get();
-    const suppliers = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const suppliers = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     res.json(suppliers);
   } catch (error) {
-    console.error('Error al obtener proveedores:', error);
-    res.status(500).json({ error: 'Error al obtener los proveedores' });
+    console.error("Error al obtener proveedores:", error);
+    res.status(500).json({ error: "Error al obtener los proveedores" });
   }
 };
 
@@ -27,15 +30,17 @@ export const createSupplier = async (req, res) => {
     const supplierData = req.body;
 
     if (!supplierData.razonSocial) {
-      return res.status(400).json({ error: 'La razón social del proveedor es requerida' });
+      return res
+        .status(400)
+        .json({ error: "La razón social del proveedor es requerida" });
     }
 
     const docRef = await db.collection(COLLECTION).add(supplierData);
     const newSupplier = { id: docRef.id, ...supplierData };
     res.status(201).json(newSupplier);
   } catch (error) {
-    console.error('Error al crear proveedor:', error);
-    res.status(500).json({ error: 'Error al crear el proveedor' });
+    console.error("Error al crear proveedor:", error);
+    res.status(500).json({ error: "Error al crear el proveedor" });
   }
 };
 
@@ -53,14 +58,14 @@ export const updateSupplier = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Proveedor no encontrado' });
+      return res.status(404).json({ error: "Proveedor no encontrado" });
     }
 
     await docRef.update(updatedData);
     res.json({ id, ...updatedData });
   } catch (error) {
-    console.error('Error al actualizar proveedor:', error);
-    res.status(500).json({ error: 'Error al actualizar el proveedor' });
+    console.error("Error al actualizar proveedor:", error);
+    res.status(500).json({ error: "Error al actualizar el proveedor" });
   }
 };
 
@@ -75,13 +80,13 @@ export const deleteSupplier = async (req, res) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      return res.status(404).json({ error: 'Proveedor no encontrado' });
+      return res.status(404).json({ error: "Proveedor no encontrado" });
     }
 
     await docRef.delete();
-    res.json({ id, message: 'Proveedor eliminado correctamente' });
+    res.json({ id, message: "Proveedor eliminado correctamente" });
   } catch (error) {
-    console.error('Error al eliminar proveedor:', error);
-    res.status(500).json({ error: 'Error al eliminar el proveedor' });
+    console.error("Error al eliminar proveedor:", error);
+    res.status(500).json({ error: "Error al eliminar el proveedor" });
   }
 };

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   fetchCategories, 
@@ -15,11 +16,11 @@ export const useCategories = () => {
 
   const isLoading = status === 'loading';
 
-  const loadCategories = () => {
+  const loadCategories = useCallback(() => {
     dispatch(fetchCategories());
-  };
+  }, [dispatch]);
 
-  const addCategory = async (formData) => {
+  const addCategory = useCallback(async (formData) => {
     try {
       await dispatch(addCategoryAsync(formData)).unwrap();
       triggerToast("Categoría creada correctamente", "success");
@@ -27,9 +28,9 @@ export const useCategories = () => {
       console.error(err);
       triggerToast("Error al crear categoría", "error");
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const updateCategory = async (updatedCategory) => {
+  const updateCategory = useCallback(async (updatedCategory) => {
     try {
       await dispatch(updateCategoryAsync(updatedCategory)).unwrap();
       triggerToast("Categoría actualizada correctamente", "info");
@@ -37,9 +38,9 @@ export const useCategories = () => {
       console.error(err);
       triggerToast("Error al actualizar categoría", "error");
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const deleteCategory = async (id) => {
+  const deleteCategory = useCallback(async (id) => {
     const category = categories.find((c) => c.id === id);
     if (!category || category.protected) return;
 
@@ -56,7 +57,7 @@ export const useCategories = () => {
       console.error(err);
       triggerToast("Error al eliminar categoría", "error");
     }
-  };
+  }, [dispatch, triggerToast, categories]);
 
   return {
     categories,

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchProducts,
@@ -6,9 +7,7 @@ import {
   deleteProductAsync,
 } from "../store/slices/productsSlice";
 import { useUI } from "./useUI";
-
-const STOCK_THRESHOLD = 5;
-
+import { STOCK_THRESHOLD } from "../constants/inventory";
 export const useProducts = () => {
   const dispatch = useDispatch();
   const {
@@ -20,11 +19,11 @@ export const useProducts = () => {
 
   const isLoading = status === "loading";
 
-  const loadProducts = () => {
+  const loadProducts = useCallback(() => {
     dispatch(fetchProducts());
-  };
+  }, [dispatch]);
 
-  const addProduct = async (formData) => {
+  const addProduct = useCallback(async (formData) => {
     try {
       await dispatch(addProductAsync(formData)).unwrap();
       triggerToast("Producto agregado al inventario", "success");
@@ -32,9 +31,9 @@ export const useProducts = () => {
       console.error(err);
       triggerToast("Error al agregar producto", "error");
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const updateProduct = async (updatedProduct) => {
+  const updateProduct = useCallback(async (updatedProduct) => {
     try {
       await dispatch(updateProductAsync(updatedProduct)).unwrap();
       triggerToast("Producto actualizado correctamente", "info");
@@ -42,9 +41,9 @@ export const useProducts = () => {
       console.error(err);
       triggerToast("Error al actualizar producto", "error");
     }
-  };
+  }, [dispatch, triggerToast]);
 
-  const deleteProduct = async (id) => {
+  const deleteProduct = useCallback(async (id) => {
     try {
       await dispatch(deleteProductAsync(id)).unwrap();
       triggerToast("Producto eliminado del sistema", "error");
@@ -52,7 +51,7 @@ export const useProducts = () => {
       console.error(err);
       triggerToast("Error al eliminar producto", "error");
     }
-  };
+  }, [dispatch, triggerToast]);
 
   const stats = {
     totalProducts: products.length,
