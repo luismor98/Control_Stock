@@ -1,24 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
-/**
- * RegisterPage — Componente de Registro de Usuario.
- *
- * ¿Qué cambió con el refactor?
- * ANTES: Importaba useDispatch, useSelector, registerUser y clearError
- *        de Redux directamente. Mezclaba lógica de negocio con UI.
- *
- * AHORA: Usa el hook useAuth que encapsula toda esa lógica.
- *        Este componente mantiene solo el estado LOCAL del formulario
- *        (formData, passwordError) porque eso es exclusivo de la UI
- *        y no necesita estar en el estado global.
- *
- * Regla de oro: ¿Este estado necesita ser leído por otro componente
- * en otra parte del árbol? Si NO → useState local.
- *                              Si SÍ → Redux global.
- */
 const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
-  // ✅ Reemplaza: useDispatch + useSelector + dispatch(clearError()) en useEffect
   const { register, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -32,7 +15,10 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
 
   // Validar si las contraseñas coinciden en tiempo real
   useEffect(() => {
-    if (formData.confirmPassword && formData.password !== formData.confirmPassword) {
+    if (
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
+    ) {
       setPasswordError("Las contraseñas no coinciden");
     } else {
       setPasswordError("");
@@ -63,18 +49,29 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30 py-12 relative">
-
       {/* Botón de volver al inicio */}
       <button
         onClick={onNavigateToLanding}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors border border-white/5">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
         </div>
-        <span className="text-sm font-semibold hidden sm:block">Volver al inicio</span>
+        <span className="text-sm font-semibold hidden sm:block">
+          Volver al inicio
+        </span>
       </button>
 
       {/* Background glow */}
@@ -119,7 +116,10 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           )}
 
           <div>
-            <label htmlFor="register-name" className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label
+              htmlFor="register-name"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
+            >
               Nombre Completo
             </label>
             <input
@@ -129,13 +129,16 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
               required
               value={formData.name}
               onChange={handleChange}
-              placeholder="Ej. Juan Pérez"
+              placeholder="Ej. Luis Morillo"
               className="w-full bg-gray-900/50 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all placeholder:text-gray-600"
             />
           </div>
 
           <div>
-            <label htmlFor="register-email" className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label
+              htmlFor="register-email"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
+            >
               Correo Electrónico
             </label>
             <input
@@ -151,7 +154,10 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <div>
-            <label htmlFor="register-password" className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label
+              htmlFor="register-password"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
+            >
               Contraseña
             </label>
             <input
@@ -167,7 +173,10 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
           </div>
 
           <div>
-            <label htmlFor="register-confirm-password" className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label
+              htmlFor="register-confirm-password"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
+            >
               Confirmar Contraseña
             </label>
             <input

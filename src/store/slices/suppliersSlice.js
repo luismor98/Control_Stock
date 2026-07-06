@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as firestoreService from '../../services/apiService';
+import * as apiService from '../../services/apiService';
 
 // Thunks
 export const fetchSuppliers = createAsyncThunk(
   'suppliers/fetchSuppliers',
   async (_, { rejectWithValue }) => {
     try {
-      const suppliers = await firestoreService.getSuppliers();
+      const suppliers = await apiService.getSuppliers();
       return suppliers;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -18,7 +18,7 @@ export const addSupplierAsync = createAsyncThunk(
   'suppliers/addSupplier',
   async (supplierData, { rejectWithValue }) => {
     try {
-      const newSupplier = await firestoreService.addSupplier(supplierData);
+      const newSupplier = await apiService.addSupplier(supplierData);
       return newSupplier;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -30,7 +30,7 @@ export const updateSupplierAsync = createAsyncThunk(
   'suppliers/updateSupplier',
   async (supplierData, { rejectWithValue }) => {
     try {
-      await firestoreService.updateSupplier(supplierData.id, supplierData);
+      await apiService.updateSupplier(supplierData.id, supplierData);
       return supplierData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -42,7 +42,7 @@ export const deleteSupplierAsync = createAsyncThunk(
   'suppliers/deleteSupplier',
   async (id, { rejectWithValue }) => {
     try {
-      await firestoreService.deleteSupplier(id);
+      await apiService.deleteSupplier(id);
       return id;
     } catch (error) {
       return rejectWithValue(error.message);

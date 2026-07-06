@@ -1,23 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
-/**
- * LoginPage — Componente de Inicio de Sesión.
- *
- * ¿Qué cambió con el refactor?
- * ANTES: Este componente importaba useDispatch, useSelector y las
- *        acciones de Redux directamente. Era el responsable de toda
- *        la lógica de autenticación Y de pintar la UI.
- *
- * AHORA: Este componente SOLO se encarga de pintar la UI y recoger
- *        los datos del formulario. Toda la lógica vive en useAuth.
- *        Esto se llama "Thin Component" (Componente Delgado).
- *
- * Beneficio: Si mañana cambiamos de Redux a Zustand o a Firebase Auth,
- * solo tocamos useAuth.js, no este archivo.
- */
 const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
-  // ✅ Una sola línea reemplaza: useDispatch, useSelector, clearError
   const { login, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -34,25 +18,34 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // ✅ Solo llamamos a login(); el hook se encarga del resto
-    // (dispatch, .unwrap(), toast, limpieza de error).
     await login(formData);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30">
-
       {/* Botón de volver al inicio */}
       <button
         onClick={onNavigateToLanding}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors border border-white/5">
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
         </div>
-        <span className="text-sm font-semibold hidden sm:block">Volver al inicio</span>
+        <span className="text-sm font-semibold hidden sm:block">
+          Volver al inicio
+        </span>
       </button>
 
       {/* Background glow para darle el mismo estilo de la marca */}

@@ -1,20 +1,24 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { 
-  fetchProducts, 
-  addProductAsync, 
-  updateProductAsync, 
-  deleteProductAsync 
-} from '../store/slices/productsSlice';
-import { useUI } from './useUI';
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchProducts,
+  addProductAsync,
+  updateProductAsync,
+  deleteProductAsync,
+} from "../store/slices/productsSlice";
+import { useUI } from "./useUI";
 
 const STOCK_THRESHOLD = 5;
 
 export const useProducts = () => {
   const dispatch = useDispatch();
-  const { items: products, status, error } = useSelector((state) => state.products);
+  const {
+    items: products,
+    status,
+    error,
+  } = useSelector((state) => state.products);
   const { triggerToast } = useUI();
 
-  const isLoading = status === 'loading';
+  const isLoading = status === "loading";
 
   const loadProducts = () => {
     dispatch(fetchProducts());

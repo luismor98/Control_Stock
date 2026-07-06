@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as firestoreService from '../../services/apiService';
+import * as apiService from '../../services/apiService';
 
 const UNCATEGORIZED_NAME = "Sin categoría";
 
@@ -8,7 +8,7 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (_, { rejectWithValue }) => {
     try {
-      const products = await firestoreService.getProducts();
+      const products = await apiService.getProducts();
       return products;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -20,7 +20,7 @@ export const addProductAsync = createAsyncThunk(
   'products/addProduct',
   async (productData, { rejectWithValue }) => {
     try {
-      const newProduct = await firestoreService.addProduct(productData);
+      const newProduct = await apiService.addProduct(productData);
       return newProduct;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -32,7 +32,7 @@ export const updateProductAsync = createAsyncThunk(
   'products/updateProduct',
   async (productData, { rejectWithValue }) => {
     try {
-      await firestoreService.updateProduct(productData.id, productData);
+      await apiService.updateProduct(productData.id, productData);
       return productData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -44,7 +44,7 @@ export const deleteProductAsync = createAsyncThunk(
   'products/deleteProduct',
   async (id, { rejectWithValue }) => {
     try {
-      await firestoreService.deleteProduct(id);
+      await apiService.deleteProduct(id);
       return id;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -63,7 +63,7 @@ export const migrateProductsCategoryAsync = createAsyncThunk(
       const migratedProducts = [];
       for (const p of productsToMigrate) {
         const updatedProduct = { ...p, category: UNCATEGORIZED_NAME };
-        await firestoreService.updateProduct(p.id, updatedProduct);
+        await apiService.updateProduct(p.id, updatedProduct);
         migratedProducts.push(updatedProduct);
       }
       return migratedProducts;

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as firestoreService from '../../services/apiService';
+import * as apiService from '../../services/apiService';
 
 const UNCATEGORIZED = {
   id: 0,
@@ -13,7 +13,7 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async (_, { rejectWithValue }) => {
     try {
-      const categories = await firestoreService.getCategories();
+      const categories = await apiService.getCategories();
       
       const hasUncategorized = categories.some(c => c.name === UNCATEGORIZED.name);
       if (hasUncategorized) {
@@ -32,7 +32,7 @@ export const addCategoryAsync = createAsyncThunk(
   async (categoryData, { rejectWithValue }) => {
     try {
       const newCategoryData = { ...categoryData, protected: false };
-      const newCategory = await firestoreService.addCategory(newCategoryData);
+      const newCategory = await apiService.addCategory(newCategoryData);
       return newCategory;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -44,7 +44,7 @@ export const updateCategoryAsync = createAsyncThunk(
   'categories/updateCategory',
   async (categoryData, { rejectWithValue }) => {
     try {
-      await firestoreService.updateCategory(categoryData.id, categoryData);
+      await apiService.updateCategory(categoryData.id, categoryData);
       return categoryData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -56,7 +56,7 @@ export const deleteCategoryAsync = createAsyncThunk(
   'categories/deleteCategory',
   async (id, { rejectWithValue }) => {
     try {
-      await firestoreService.deleteCategory(id);
+      await apiService.deleteCategory(id);
       return id;
     } catch (error) {
       return rejectWithValue(error.message);

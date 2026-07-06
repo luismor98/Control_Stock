@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isDarkMode: true,
-  currentView: 'dashboard',
+  currentView: "dashboard",
   toast: {
     show: false,
-    message: '',
-    type: 'success',
+    message: "",
+    type: "success",
   },
 };
 
 const uiSlice = createSlice({
-  name: 'ui',
+  name: "ui",
   initialState,
   reducers: {
     toggleDarkMode: (state) => {
@@ -27,7 +27,7 @@ const uiSlice = createSlice({
       state.toast = {
         show: true,
         message: action.payload.message,
-        type: action.payload.type || 'success',
+        type: action.payload.type || "success",
       };
     },
     hideToast: (state) => {
