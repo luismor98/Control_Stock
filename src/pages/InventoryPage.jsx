@@ -5,7 +5,7 @@ import ProductTable from "../components/ProductTable";
 import { useProducts } from "../hooks/useProducts";
 import { useCategories } from "../hooks/useCategories";
 import { useUI } from "../hooks/useUI";
-import { useSelector } from "react-redux";
+import { useAuth } from "../hooks/useAuth";
 
 const InventoryPage = () => {
   const { products, stats, addProduct, updateProduct, deleteProduct } = useProducts();
@@ -13,7 +13,7 @@ const InventoryPage = () => {
   const { triggerToast } = useUI();
   const [editingProduct, setEditingProduct] = useState(null);
   
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
   const isAdmin = user?.rol === 'admin';
 
   const handleSubmit = (formData) => {

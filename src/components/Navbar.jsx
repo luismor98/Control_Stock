@@ -1,9 +1,9 @@
 import { useUI } from "../hooks/useUI";
-import { useSelector } from "react-redux";
+import { useAuth } from "../hooks/useAuth";
 
 const Navbar = ({ toggleSidebar }) => {
   const { currentView } = useUI();
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useAuth();
 
   const viewTitles = {
     dashboard: "Dashboard",
