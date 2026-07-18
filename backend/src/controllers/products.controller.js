@@ -91,3 +91,49 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el producto" });
   }
 };
+
+/**
+ * PUT /api/products/migrate-category
+ * Migra masivamente los productos de una categoría a otra.
+ * Body: { oldCategory, newCategory }
+ */
+export const migrateCategory = async (req, res) => {
+  try {
+    const { oldCategory, newCategory } = req.body;
+
+    if (!oldCategory || !newCategory) {
+      return res.status(400).json({ error: "oldCategory y newCategory son requeridos" });
+    }
+
+    const snapshot = await db.collection(COLLECTION).where("category", "==", oldCategory).get();
+    
+    if (snapshot.empty) {
+      return res.json({ message: "No se encontraron productos para migrar", count: 0, migratedProducts: [] });
+    }
+
+    const batch = db.batch();
+    const migratedProducts = [];
+
+    snapshot.docs.forEach((doc) => {
+      const docRef = db.collection(COLLECTION).doc(doc.id);
+      batch.update(docRef, { category: newCategory });
+      
+      migratedProducts.push({
+        id: doc.id,
+        ...doc.data(),
+        category: newCategory
+      });
+    });
+
+    await batch.commit();
+
+    res.json({ 
+      message: "Migración completada con éxito", 
+      count: migratedProducts.length,
+      migratedProducts 
+    });
+  } catch (error) {
+    console.error("Error en migración de categoría:", error);
+    res.status(500).json({ error: "Error al realizar la migración masiva" });
+  }
+};

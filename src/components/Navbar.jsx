@@ -1,16 +1,18 @@
-import { useUI } from "../hooks/useUI";
+import { useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const Navbar = ({ toggleSidebar }) => {
-  const { currentView } = useUI();
+  const location = useLocation();
   const { user } = useAuth();
 
   const viewTitles = {
-    dashboard: "Dashboard",
-    inventory: "Gestión de Inventario",
-    categories: "Gestión de Categorías",
-    suppliers: "Gestión de Proveedores",
+    "/app/dashboard": "Dashboard",
+    "/app/inventory": "Gestión de Inventario",
+    "/app/categories": "Gestión de Categorías",
+    "/app/suppliers": "Gestión de Proveedores",
   };
+
+  const currentViewTitle = viewTitles[location.pathname] || "Dashboard";
 
   return (
     <header
@@ -67,7 +69,7 @@ const Navbar = ({ toggleSidebar }) => {
             Control Stock
           </p>
           <h1 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white leading-tight truncate transition-colors">
-            {viewTitles[currentView] || "Dashboard"}
+            {currentViewTitle}
           </h1>
         </div>
       </div>

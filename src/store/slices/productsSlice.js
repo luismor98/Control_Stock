@@ -54,20 +54,10 @@ export const deleteProductAsync = createAsyncThunk(
 
 export const migrateProductsCategoryAsync = createAsyncThunk(
   'products/migrateCategory',
-  async (oldCategoryName, { getState, rejectWithValue }) => {
+  async (oldCategoryName, { rejectWithValue }) => {
     try {
-      const state = getState();
-      const products = state.products.items;
-      const productsToMigrate = products.filter(p => p.category === oldCategoryName);
-      
-      const migratedPromises = productsToMigrate.map(async p => {
-        const updatedProduct = { ...p, category: UNCATEGORIZED_NAME };
-        await apiService.updateProduct(p.id, updatedProduct);
-        return updatedProduct;
-      });
-      
-      const migratedProducts = await Promise.all(migratedPromises);
-      return migratedProducts;
+      const response = await apiService.migrateProductsCategory(oldCategoryName, UNCATEGORIZED_NAME);
+      return response.migratedProducts; // Array con los productos modificados devueltos por el backend
     } catch (error) {
       return rejectWithValue(error.message);
     }

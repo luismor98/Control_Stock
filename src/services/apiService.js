@@ -56,6 +56,12 @@ export const deleteProduct = async (id) => {
   return id;
 };
 
+export const migrateProductsCategory = (oldCategory, newCategory) =>
+  apiFetch("/products/migrate-category", {
+    method: "PUT",
+    body: JSON.stringify({ oldCategory, newCategory }),
+  });
+
 // ─── CATEGORÍAS ───────────────────────────────────────────────────────────────
 
 export const getCategories = () => apiFetch("/categories");

@@ -1,6 +1,12 @@
+import { useUI } from "../hooks/useUI";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../store/slices/authSlice";
+import { NavLink } from "react-router-dom";
+
 const navItems = [
   {
     id: "dashboard",
+    path: "/app/dashboard",
     label: "Dashboard",
     icon: (
       <svg
@@ -22,6 +28,7 @@ const navItems = [
   },
   {
     id: "inventory",
+    path: "/app/inventory",
     label: "Inventario",
     icon: (
       <svg
@@ -42,6 +49,7 @@ const navItems = [
   },
   {
     id: "categories",
+    path: "/app/categories",
     label: "Categorías",
     icon: (
       <svg
@@ -61,6 +69,7 @@ const navItems = [
   },
   {
     id: "suppliers",
+    path: "/app/suppliers",
     label: "Proveedores",
     icon: (
       <svg 
@@ -170,16 +179,12 @@ const IconLogout = () => (
   </svg>
 );
 
-import { useUI } from "../hooks/useUI";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "../store/slices/authSlice";
 
 const Sidebar = ({
   isOpen,
-  onClose,
-  handleSetCurrentView,
+  onClose
 }) => {
-  const { currentView, isDarkMode, toggleDarkMode } = useUI();
+  const { isDarkMode, toggleDarkMode } = useUI();
   const dispatch = useDispatch();
 
   return (
@@ -238,32 +243,36 @@ const Sidebar = ({
         Navegación
       </p>
 
-      {navItems.map((item) => {
-        const isActive = currentView === item.id;
-        return (
-          <button
-            key={item.id}
-            id={`nav-${item.id}-btn`}
-            onClick={() => handleSetCurrentView(item.id)}
-            className={`mx-3 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
-              ${
-                isActive
-                  ? "bg-gradient-to-r from-indigo-600/70 to-purple-600/50 text-white shadow-lg shadow-indigo-500/20 border border-indigo-500/30"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5"
-              }`}
-          >
-            <span
-              className={`${isActive ? "text-indigo-300" : "text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400"} transition-colors`}
-            >
-              {item.icon}
-            </span>
-            {item.label}
-            {isActive && (
-              <span className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/60" />
-            )}
-          </button>
-        );
-      })}
+      {navItems.map((item) => (
+        <NavLink
+          key={item.id}
+          to={item.path}
+          id={`nav-${item.id}-btn`}
+          onClick={() => {
+            if (window.innerWidth < 1024) onClose();
+          }}
+          className={({ isActive }) => `mx-3 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
+            ${
+              isActive
+                ? "bg-gradient-to-r from-indigo-600/70 to-purple-600/50 text-white shadow-lg shadow-indigo-500/20 border border-indigo-500/30"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5"
+            }`}
+        >
+          {({ isActive }) => (
+            <>
+              <span
+                className={`${isActive ? "text-indigo-300" : "text-gray-400 group-hover:text-indigo-600 dark:text-gray-500 dark:group-hover:text-indigo-400"} transition-colors`}
+              >
+                {item.icon}
+              </span>
+              {item.label}
+              {isActive && (
+                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/60" />
+              )}
+            </>
+          )}
+        </NavLink>
+      ))}
 
       <div className="mt-auto pt-5">
         <p className="text-xs text-gray-600 uppercase font-semibold tracking-widest px-5 mb-2">

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: control-stock-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    networks:
+      - control-stock-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: control-stock-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - control-stock-net
+
+networks:
+  control-stock-net:
+    driver: bridge

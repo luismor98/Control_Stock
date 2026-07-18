@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
+const LoginPage = () => {
   const { login, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -24,8 +25,8 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30">
       {/* Botón de volver al inicio */}
-      <button
-        onClick={onNavigateToLanding}
+      <Link
+        to="/"
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors border border-white/5">
@@ -46,7 +47,7 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
         <span className="text-sm font-semibold hidden sm:block">
           Volver al inicio
         </span>
-      </button>
+      </Link>
 
       {/* Background glow para darle el mismo estilo de la marca */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
@@ -170,12 +171,12 @@ const LoginPage = ({ onNavigateToRegister, onNavigateToLanding }) => {
 
         <p className="text-center text-sm text-gray-400 mt-8">
           ¿No tienes cuenta?{" "}
-          <button
-            onClick={onNavigateToRegister}
+          <Link
+            to="/register"
             className="gradient-text font-bold hover:opacity-80 transition-opacity"
           >
             Regístrate aquí
-          </button>
+          </Link>
         </p>
       </div>
     </div>

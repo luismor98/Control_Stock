@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
+const RegisterPage = () => {
   const { register, isLoading, error } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -50,8 +51,8 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 font-sans selection:bg-indigo-500/30 py-12 relative">
       {/* Botón de volver al inicio */}
-      <button
-        onClick={onNavigateToLanding}
+      <Link
+        to="/"
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-400 hover:text-white transition-colors z-50 group"
       >
         <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors border border-white/5">
@@ -72,7 +73,7 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
         <span className="text-sm font-semibold hidden sm:block">
           Volver al inicio
         </span>
-      </button>
+      </Link>
 
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -242,12 +243,12 @@ const RegisterPage = ({ onNavigateToLogin, onNavigateToLanding }) => {
 
         <p className="text-center text-sm text-gray-400 mt-8">
           ¿Ya tienes cuenta?{" "}
-          <button
-            onClick={onNavigateToLogin}
+          <Link
+            to="/login"
             className="gradient-text font-bold hover:opacity-80 transition-opacity"
           >
             Inicia sesión
-          </button>
+          </Link>
         </p>
       </div>
     </div>
