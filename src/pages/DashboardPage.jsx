@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import StatCard from "../components/StatCard";
 import { useProducts } from "../hooks/useProducts";
 import { useUI } from "../hooks/useUI";
@@ -178,39 +178,52 @@ const DONUT_COLORS = [
 const CategoryDonut = ({ products }) => {
   const [hovered, setHovered] = useState(null);
 
-  const byCategory = products.reduce((acc, p) => {
-    acc[p.category] = (acc[p.category] || 0) + p.price * p.quantity;
-    return acc;
-  }, {});
+  const { total, arcs, cx, cy, R, r, circumference } = useMemo(() => {
+    const byCategory = products.reduce((acc, p) => {
+      acc[p.category] = (acc[p.category] || 0) + p.price * p.quantity;
+      return acc;
+    }, {});
 
-  const entries = Object.entries(byCategory)
-    .sort((a, b) => b[1] - a[1])
-    .map(([name, value], i) => ({
-      name,
-      value,
-      color: DONUT_COLORS[i % DONUT_COLORS.length],
-    }));
+    const entriesData = Object.entries(byCategory)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value], i) => ({
+        name,
+        value,
+        color: DONUT_COLORS[i % DONUT_COLORS.length],
+      }));
 
-  const total = entries.reduce((s, e) => s + e.value, 0);
+    const totalValue = entriesData.reduce((s, e) => s + e.value, 0);
 
-  const R = 60;
-  const r = 38;
-  const cx = 80;
-  const cy = 80;
-  const circumference = 2 * Math.PI * R;
+    const radiusOuter = 60;
+    const radiusInner = 38;
+    const centerX = 80;
+    const centerY = 80;
+    const circ = 2 * Math.PI * radiusOuter;
 
-  const arcs = entries.map((entry, index) => {
-    const pct = total > 0 ? entry.value / total : 0;
-    const dash = pct * circumference;
-    const gap = circumference - dash;
-    
-    const offset = entries.slice(0, index).reduce((sum, prevEntry) => {
-      const prevPct = total > 0 ? prevEntry.value / total : 0;
-      return sum + (prevPct * circumference);
-    }, 0);
+    const arcsData = entriesData.map((entry, index) => {
+      const pct = totalValue > 0 ? entry.value / totalValue : 0;
+      const dash = pct * circ;
+      const gap = circ - dash;
+      
+      const offset = entriesData.slice(0, index).reduce((sum, prevEntry) => {
+        const prevPct = totalValue > 0 ? prevEntry.value / totalValue : 0;
+        return sum + (prevPct * circ);
+      }, 0);
 
-    return { ...entry, pct, dash, gap, offset };
-  });
+      return { ...entry, pct, dash, gap, offset };
+    });
+
+    return { 
+      total: totalValue, 
+      arcs: arcsData, 
+      entries: entriesData,
+      cx: centerX,
+      cy: centerY,
+      R: radiusOuter,
+      r: radiusInner,
+      circumference: circ
+    };
+  }, [products]);
 
   const hoveredEntry = hovered !== null ? arcs[hovered] : null;
 
@@ -332,6 +345,7 @@ const CategoryDonut = ({ products }) => {
 const DashboardPage = () => {
   const { products, stats } = useProducts();
   const { setCurrentView } = useUI();
+
   const byCategory = products.reduce((acc, p) => {
     acc[p.category] = (acc[p.category] || 0) + 1;
     return acc;

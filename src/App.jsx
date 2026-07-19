@@ -17,6 +17,7 @@ import SuppliersPage from "./pages/SuppliersPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Toast from "./components/Toast";
 import LoadingScreen from "./components/LoadingScreen";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Hooks y Servicios
 import { useProducts } from "./hooks/useProducts";
@@ -81,18 +82,22 @@ const App = () => {
     {
       path: "/",
       element: isAuthenticated ? <Navigate to="/app/dashboard" replace /> : <LandingPage />,
+      errorElement: <ErrorBoundary />,
     },
     {
       path: "/login",
       element: isAuthenticated ? <Navigate to="/app/dashboard" replace /> : <LoginPage />,
+      errorElement: <ErrorBoundary />,
     },
     {
       path: "/register",
       element: isAuthenticated ? <Navigate to="/app/dashboard" replace /> : <RegisterPage />,
+      errorElement: <ErrorBoundary />,
     },
     {
       path: "/app",
       element: <ProtectedRoute />,
+      errorElement: <ErrorBoundary />,
       children: [
         {
           element: isLoadingData ? <LoadingScreen text="Cargando inventario..." /> : <MainLayout />,

@@ -6,6 +6,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: resolve(__dirname, '../../.env') });
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Importar rutas
 import productsRoutes from './routes/products.routes.js';
@@ -24,6 +26,19 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Seguridad en cabeceras HTTP
+app.use(helmet());
+
+// Límite de peticiones (100 peticiones cada 15 minutos por IP)
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Demasiadas peticiones. Por favor, inténtalo más tarde.' }
+});
+app.use('/api/', apiLimiter);
 
 app.use(express.json());
 
@@ -52,6 +67,7 @@ app.use((req, res) => {
 
 // ─── Manejador global de errores ──────────────────────────────────────────────
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error('Error no manejado:', err);
   res.status(500).json({ error: 'Error interno del servidor' });

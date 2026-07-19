@@ -97,7 +97,7 @@ export const logoutUser = createAsyncThunk(
     try {
       await signOut(auth);
       return null;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Error al cerrar sesión');
     }
   }

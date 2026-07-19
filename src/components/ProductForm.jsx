@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }) => {
   const defaultCategory = categories.length > 0 ? categories[0].name : "";
@@ -12,7 +12,11 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
+  const [prevEditingProduct, setPrevEditingProduct] = useState(editingProduct);
+
+  // Derivar estado durante el renderizado (Evita renderizados en cascada)
+  if (editingProduct !== prevEditingProduct) {
+    setPrevEditingProduct(editingProduct);
     if (editingProduct) {
       setForm({
         name: editingProduct.name,
@@ -21,12 +25,11 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
         price: String(editingProduct.price),
         description: editingProduct.description || "",
       });
-      setErrors({});
     } else {
       setForm(emptyForm);
-      setErrors({});
     }
-  }, [editingProduct]);
+    setErrors({});
+  }
 
   const validate = () => {
     const newErrors = {};

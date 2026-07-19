@@ -101,7 +101,7 @@ export const useAuth = () => {
       triggerToast("Sesión cerrada correctamente", "info");
       // setCurrentView cambia la vista en uiSlice. App.jsx detecta
       // que isAuthenticated es false y muestra la pantalla de auth.
-    } catch (err) {
+    } catch {
       triggerToast("Error al cerrar sesión", "error");
     }
   }, [dispatch, triggerToast]);

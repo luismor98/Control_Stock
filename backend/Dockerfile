@@ -11,6 +11,9 @@ RUN npm install -g pnpm@9 && pnpm install
 # Copiar el resto del código
 COPY . .
 
+# Establecer el entorno de producción
+ENV NODE_ENV=production
+
 # Exponer el puerto
 EXPOSE 3001
 

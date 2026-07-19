@@ -1,4 +1,4 @@
-import { useRef } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { useUI } from "../hooks/useUI";

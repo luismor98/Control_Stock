@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -12,19 +12,10 @@ const RegisterPage = () => {
     confirmPassword: "",
   });
 
-  const [passwordError, setPasswordError] = useState("");
-
-  // Validar si las contraseñas coinciden en tiempo real
-  useEffect(() => {
-    if (
-      formData.confirmPassword &&
-      formData.password !== formData.confirmPassword
-    ) {
-      setPasswordError("Las contraseñas no coinciden");
-    } else {
-      setPasswordError("");
-    }
-  }, [formData.password, formData.confirmPassword]);
+  const passwordError =
+    formData.confirmPassword && formData.password !== formData.confirmPassword
+      ? "Las contraseñas no coinciden"
+      : "";
 
   const handleChange = (e) => {
     setFormData({
