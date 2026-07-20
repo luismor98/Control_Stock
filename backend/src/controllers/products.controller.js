@@ -35,8 +35,28 @@ export const createProduct = async (req, res) => {
         .json({ error: "El nombre del producto es requerido" });
     }
 
-    const docRef = await db.collection(COLLECTION).add(productData);
-    const newProduct = { id: docRef.id, ...productData };
+    const batch = db.batch();
+    const productRef = db.collection(COLLECTION).doc();
+    
+    batch.set(productRef, productData);
+
+    // Registrar Kardex
+    const movementRef = db.collection("movements").doc();
+    batch.set(movementRef, {
+      productId: productRef.id,
+      productName: productData.name,
+      type: "ENTRADA",
+      reason: "Creación de producto",
+      quantity: Number(productData.quantity || 0),
+      previousStock: 0,
+      newStock: Number(productData.quantity || 0),
+      user: req.user,
+      date: new Date().toISOString()
+    });
+
+    await batch.commit();
+
+    const newProduct = { id: productRef.id, ...productData };
     res.status(201).json(newProduct);
   } catch (error) {
     console.error("Error al crear producto:", error);
@@ -52,8 +72,8 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedData = { ...req.body };
-    delete updatedData.id; // No guardamos el id dentro del documento
+    const { reason, ...updatedData } = req.body; // Extraemos reason
+    delete updatedData.id;
 
     const docRef = db.collection(COLLECTION).doc(id);
     const doc = await docRef.get();
@@ -62,7 +82,32 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
 
-    await docRef.update(updatedData);
+    const oldData = doc.data();
+    const oldQty = Number(oldData.quantity || 0);
+    const newQty = Number(updatedData.quantity !== undefined ? updatedData.quantity : oldQty);
+
+    const batch = db.batch();
+    batch.update(docRef, updatedData);
+
+    // Registrar Kardex solo si cambió el stock
+    if (oldQty !== newQty) {
+      const diff = newQty - oldQty;
+      const type = diff > 0 ? "ENTRADA" : "SALIDA";
+      const movementRef = db.collection("movements").doc();
+      batch.set(movementRef, {
+        productId: id,
+        productName: updatedData.name || oldData.name,
+        type,
+        reason: reason || "Actualización manual",
+        quantity: Math.abs(diff),
+        previousStock: oldQty,
+        newStock: newQty,
+        user: req.user,
+        date: new Date().toISOString()
+      });
+    }
+
+    await batch.commit();
     res.json({ id, ...updatedData });
   } catch (error) {
     console.error("Error al actualizar producto:", error);
@@ -84,7 +129,26 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
 
-    await docRef.delete();
+    const oldData = doc.data();
+    const batch = db.batch();
+    
+    batch.delete(docRef);
+
+    // Registrar Kardex
+    const movementRef = db.collection("movements").doc();
+    batch.set(movementRef, {
+      productId: id,
+      productName: oldData.name,
+      type: "SALIDA",
+      reason: "Producto eliminado",
+      quantity: Number(oldData.quantity || 0),
+      previousStock: Number(oldData.quantity || 0),
+      newStock: 0,
+      user: req.user,
+      date: new Date().toISOString()
+    });
+
+    await batch.commit();
     res.json({ id, message: "Producto eliminado correctamente" });
   } catch (error) {
     console.error("Error al eliminar producto:", error);

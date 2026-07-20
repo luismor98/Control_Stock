@@ -23,7 +23,12 @@ const apiFetch = async (endpoint, options = {}) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = { error: "Network error or invalid JSON response" };
+    }
     throw new Error(
       errorData.error || `Error ${response.status}: ${response.statusText}`,
     );
@@ -116,3 +121,7 @@ export const syncUser = () =>
   apiFetch("/auth/sync", {
     method: "POST",
   });
+
+// ─── MOVIMIENTOS (KARDEX) ─────────────────────────────────────────────────────
+
+export const getMovements = () => apiFetch("/movements");

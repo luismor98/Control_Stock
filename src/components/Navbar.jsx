@@ -10,6 +10,7 @@ const Navbar = ({ toggleSidebar }) => {
     "/app/inventory": "Gestión de Inventario",
     "/app/categories": "Gestión de Categorías",
     "/app/suppliers": "Gestión de Proveedores",
+    "/app/movements": "Kardex de Movimientos",
   };
 
   const currentViewTitle = viewTitles[location.pathname] || "Dashboard";
@@ -31,7 +32,7 @@ const Navbar = ({ toggleSidebar }) => {
           id="sidebar-toggle-btn"
           onClick={toggleSidebar}
           aria-label="Abrir menú"
-          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/8 transition-all duration-200 flex-shrink-0"
+          className="lg:hidden flex items-center justify-center w-9 h-9 rounded-xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 flex-shrink-0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

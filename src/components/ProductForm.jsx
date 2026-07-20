@@ -8,6 +8,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
     quantity: "",
     price: "",
     description: "",
+    reason: "",
   };
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
@@ -24,6 +25,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
         quantity: String(editingProduct.quantity),
         price: String(editingProduct.price),
         description: editingProduct.description || "",
+        reason: "", // Se resetea al entrar en modo edición
       });
     } else {
       setForm(emptyForm);
@@ -64,6 +66,7 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
       quantity: Number(form.quantity),
       price: parseFloat(Number(form.price).toFixed(2)),
       description: form.description.trim(),
+      reason: isEditing ? form.reason.trim() : "",
     });
     setForm(emptyForm);
     setErrors({});
@@ -237,9 +240,26 @@ const ProductForm = ({ onSubmit, editingProduct, onCancelEdit, categories = [] }
             onChange={handleChange}
             placeholder="Describe brevemente el producto..."
             rows={2}
-            className={`${inputClass("description")} resize-none`}
+            className={inputClass("description")}
           />
         </div>
+
+        {isEditing && (
+          <div>
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1.5">
+              Motivo de la modificación (opcional)
+            </label>
+            <textarea
+              id="product-reason"
+              name="reason"
+              value={form.reason}
+              onChange={handleChange}
+              placeholder="Ej: Ajuste de stock, Venta..."
+              rows={2}
+              className={inputClass("reason")}
+            />
+          </div>
+        )}
 
         <div className="flex gap-3 pt-1">
           <button

@@ -14,6 +14,7 @@ import DashboardPage from "./pages/DashboardPage";
 import InventoryPage from "./pages/InventoryPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import SuppliersPage from "./pages/SuppliersPage";
+import MovementsPage from "./pages/MovementsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Toast from "./components/Toast";
 import LoadingScreen from "./components/LoadingScreen";
@@ -107,6 +108,7 @@ const App = () => {
             { path: "inventory", element: <InventoryPage /> },
             { path: "categories", element: <CategoriesPage /> },
             { path: "suppliers", element: <SuppliersPage /> },
+            { path: "movements", element: <MovementsPage /> },
           ],
         },
       ],

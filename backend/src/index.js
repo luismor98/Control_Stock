@@ -14,6 +14,7 @@ import productsRoutes from './routes/products.routes.js';
 import categoriesRoutes from './routes/categories.routes.js';
 import suppliersRoutes from './routes/suppliers.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import movementsRoutes from './routes/movements.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -58,6 +59,7 @@ app.use('/api/products', productsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/suppliers', suppliersRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/movements', movementsRoutes);
 
 // ─── Ruta no encontrada (404) ─────────────────────────────────────────────────
 
