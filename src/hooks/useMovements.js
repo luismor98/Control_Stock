@@ -20,8 +20,8 @@ export const useMovements = () => {
     }
   }, [status, error, triggerToast]);
 
-  const reloadMovements = useCallback(() => {
-    dispatch(fetchMovements());
+  const reloadMovements = useCallback((filters = {}) => {
+    dispatch(fetchMovements(filters));
   }, [dispatch]);
 
   return {

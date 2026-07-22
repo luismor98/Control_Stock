@@ -124,4 +124,14 @@ export const syncUser = () =>
 
 // ─── MOVIMIENTOS (KARDEX) ─────────────────────────────────────────────────────
 
-export const getMovements = () => apiFetch("/movements");
+export const getMovements = (filters = {}) => {
+  const queryParams = new URLSearchParams();
+  if (filters.startDate) queryParams.append("startDate", filters.startDate);
+  if (filters.endDate) queryParams.append("endDate", filters.endDate);
+  if (filters.product) queryParams.append("product", filters.product);
+  if (filters.type) queryParams.append("type", filters.type);
+  if (filters.user) queryParams.append("user", filters.user);
+
+  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+  return apiFetch(`/movements${queryString}`);
+};

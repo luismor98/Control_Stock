@@ -3,9 +3,9 @@ import * as apiService from "../../services/apiService";
 
 export const fetchMovements = createAsyncThunk(
   "movements/fetchMovements",
-  async (_, { rejectWithValue }) => {
+  async (filters, { rejectWithValue }) => {
     try {
-      const data = await apiService.getMovements();
+      const data = await apiService.getMovements(filters);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
